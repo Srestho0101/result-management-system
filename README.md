@@ -1,0 +1,179 @@
+# Result Management System
+
+A school result management system built with Flask. This application implements three user roles (Admin, Principal, Teacher) and provides administrative workflows for managing principals, teachers, departments, subjects, students, attendance, and marks topics.
+
+## Overview
+
+The project is a Flask-based web application organized with Blueprints and SQLAlchemy models. It is designed to support:
+
+- Admin dashboard to manage principals
+- Principal dashboard to manage teachers, departments, subjects, and curriculum
+- Teacher dashboard to manage students, attendance, and marks topics
+- Session-based login with role-aware navigation
+
+> Note: This project is currently incomplete and requires additional refinement. The README is based on the current code state.
+
+## Technology Stack
+
+- Python 3
+- Flask
+- Flask SQLAlchemy
+- Flask-WTF / WTForms
+- SQLite (default)
+
+## Installation
+
+1. Create a Python virtual environment:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+2. Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+> Important: The current `requirements.txt` file does not list all code dependencies. Add the following packages if missing:
+>
+> - `Flask-WTF`
+> - `WTForms`
+> - `Flask-SQLAlchemy`
+>
+> Then run:
+>
+> ```bash
+> pip install Flask-WTF WTForms Flask-SQLAlchemy
+> ```
+
+3. Run the app:
+
+```bash
+python run.py
+```
+
+The app creates the database automatically when started.
+
+## Configuration
+
+Configuration is loaded from `app/config.py`.
+
+- `SECRET_KEY`: used for session security
+- `SQLALCHEMY_DATABASE_URI`: database connection string
+
+Default values are:
+
+- `SECRET_KEY = 'your-secret-key'`
+- `SQLALCHEMY_DATABASE_URI = 'sqlite:///database.db'`
+
+For production, set environment variables:
+
+```bash
+export SECRET_KEY='your-secret-key'
+export DATABASE_URL='sqlite:///database.db'
+```
+
+## Run the Application
+
+Start the server with:
+
+```bash
+python run.py
+```
+
+Then visit:
+
+- `http://127.0.0.1:5000/` for the home page
+- `http://127.0.0.1:5000/login` for login
+
+## Default Login
+
+The app currently uses a hard-coded admin account in `app/routes/auth/login.py`:
+
+- username: `admin`
+- password: `admin123`
+
+Principal and teacher users must be created from the admin and principal dashboards.
+
+## User Roles and Flows
+
+### Admin
+
+- Login with the default admin account
+- Add new principals
+- View principals
+- Edit principal profile
+- Delete principals
+
+### Principal
+
+- Login after being created by the admin
+- Select a shift (Morning or Day)
+- Add teachers
+- View teachers
+- Edit or delete teachers
+- Manage departments
+- Add subjects
+- Assign subjects to departments and semesters
+- View departments and subjects
+
+### Teacher
+
+- Login after being created by a principal
+- Add students
+- View student lists
+- Record and save attendance
+- Manage marks topics
+
+## Project Structure
+
+Key files and directories:
+
+- `run.py` — application entrypoint
+- `app/__init__.py` — Flask app factory and Blueprint registration
+- `app/config.py` — configuration settings
+- `app/extensions.py` — SQLAlchemy initialization
+- `app/models/` — database models for Admin, Principal, Teacher, Student, Departments, Subjects, Curriculum, Attendance, and Marks Topics
+- `app/routes/` — blueprint route handlers split by role
+- `app/utils/` — form definitions
+- `templates/` — HTML templates for each role
+- `static/` — CSS and JS assets
+
+## Known Issues and Review Notes
+
+The current code contains some areas to improve before final release:
+
+- Passwords are stored in plain text. Add password hashing with `werkzeug.security.generate_password_hash` and `check_password_hash`.
+- Authentication logic in `app/routes/auth/login.py` is not fully robust and mixes principal and teacher login flows incorrectly.
+- `requirements.txt` is incomplete and should include `Flask-WTF`, `WTForms`, and `Flask-SQLAlchemy`.
+- Session management uses `session["temp_principal_id"]` and `session["principal_id"]`; verify principal/teacher workflows carefully.
+- No unit tests are included.
+
+## Future Improvements
+
+- Add password hashing and stronger authentication
+- Add input validation and error handling for all routes
+- Create a proper registration flow for principals, teachers, and students
+- Add a student-facing view for marks and attendance records
+- Add tests for models, forms, and routes
+- Add deployment instructions and production configuration
+
+## Contribution
+
+Once the project is complete, update this README with:
+
+- full dependency list[text](../spra/Result_Management_System/README.md)
+- installation and usage steps for production
+- new feature descriptions
+- testing commands
+- deployment guide
+
+---
+
+This document was created from the current project implementation and is ready to be updated as the app evolves.
+
+## Author 
+- Rakib Hossen
+- Aronno Rahman Arpa
