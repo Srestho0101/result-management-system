@@ -1,5 +1,3 @@
-from webbrowser import get
-
 from flask import Blueprint, render_template, session, redirect, url_for, flash
 from app.models import teacher
 from app.models.teacher import AddStudentInfo,MarksTopic
@@ -33,7 +31,6 @@ def show_student():
         (d.department_id, f"{d.department_code} - {d.department_name}")
         for d in departments
     ]
-
     students = AddStudentInfo.query.filter_by(
         teacher_id=teacher_id
     ).all()
@@ -105,3 +102,39 @@ def show_marks_system():
         "teacher/get_marks_system/show_marks_system.html",
         marks_topic_name=marks_topic_name
     )
+
+@get_marks_bp.route("/teacher<int:marks_topic_id>/edit", methods=["GET", "POST"]) 
+def edit_mark_topic(marks_topic_id):
+    if not session.get("teacher"):
+        return redirect(url_for("login.login"))
+    
+    marks_topic_name = MarksTopic.query.get_or_404(marks_topic_id)
+    form = MarksTopicForm(obj=marks_topic_name)
+
+    try:
+        if form.validate_on_submit():
+            marks_topic_name.marks_topic_name = form.add_marks_topic_name.data
+            db.session.commit()
+            flash("Editing successfully", "success")
+        
+            return redirect(url_for("get_marks.show_marks_system")) 
+            
+    except Exception as e:
+        db.session.rollback() 
+        flash(f"Error: Editing Mark topic name {str(e)}", "danger")
+
+    return render_template("teacher/get_marks_system/edit_mark_topic.html", form=form, marks_topic_name=marks_topic_name)
+
+@get_marks_bp.route("/teacher<int:marks_topic_id>/delete")
+def delete_mark_topic(marks_topic_id):
+    if not session.get("teacher"):
+        return redirect(url_for("login.login"))
+    try:
+        marks_topic_name = MarksTopic.query.get_or_404(marks_topic_id)
+        db.session.delete(marks_topic_name)
+        db.session.commit()
+        flash("Marks topic deleted successfully", "success")
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Error: Deleting Mark topic name {str(e)}", "danger")
+    return redirect(url_for("get_marks.show_marks_system"))

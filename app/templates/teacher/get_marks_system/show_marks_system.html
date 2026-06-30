@@ -21,7 +21,7 @@
         <td>{{ mtn.marks_topic_name }}</td>
         <td>
           <a
-            href="#"
+            href="{{ url_for('get_marks.edit_mark_topic',marks_topic_id=mtn.marks_topic_id)}}"
           >
             <button class="btn btn-primary btn-sm">Edit</button></a
           >

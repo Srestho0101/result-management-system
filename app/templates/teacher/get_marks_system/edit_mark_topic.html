@@ -1,0 +1,40 @@
+{% extends "base/base.html" %}
+
+{% block title %}
+Marks Topic Name
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header">
+            <h4>Edit Marks Topic</h4>
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                {{ form.hidden_tag() }}
+
+                <div class="mb-3">
+                    {{ form.add_marks_topic_name.label(class="form-label") }}
+                    {{ form.add_marks_topic_name(class="form-control") }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
