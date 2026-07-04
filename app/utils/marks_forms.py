@@ -3,6 +3,11 @@ from wtforms import StringField,SubmitField,IntegerField,SelectField
 from wtforms.validators import DataRequired
 
 class MarksTopicForm(FlaskForm):
+    department_id = SelectField(
+        "Department",
+        choices=[],
+        validators=[DataRequired()]
+    )
     subject = SelectField(
         "Subject",
         choices=[],

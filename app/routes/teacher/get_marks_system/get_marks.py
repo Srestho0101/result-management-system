@@ -69,12 +69,19 @@ def get_marks_topic_name():
     
     form = MarksTopicForm()
     principal_id = session.get("temp_principal_id")
+    teacher_id = session.get("teacher_id")
     subjects = Subjects.query.filter_by(
-        principal_id=principal_id
+        principal_id=principal_id,
+        teacher_id=teacher_id
     ).all()
     form.subject.choices = [
         (s.subject_id, f"{s.subject_code} - {s.subject_name}")  
         for s in subjects
+    ]
+
+    form.department_id.choices = [
+        (d.department_id, f"{d.department_code} - {d.department_name}")
+        for d in Department.query.filter_by(principal_id=principal_id,teacher_id=teacher_id).all()
     ]
     if form.validate_on_submit():
         teacher_id = session.get("teacher_id")

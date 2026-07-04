@@ -20,6 +20,10 @@ Marks Topic Name
 
                 {{ form.hidden_tag() }}
                 <div class="mb-3">
+                    {{ form.department_id.label(class="form-label") }}
+                    {{ form.department_id(class="form-select") }}
+                </div>
+                <div class="mb-3">
                     {{ form.subject.label(class="form-label") }}
                     {{ form.subject(class="form-select") }}
                 </div>

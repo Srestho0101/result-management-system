@@ -19,8 +19,10 @@ def add_student():
     student_form = AddStudentForm()
     # Department dropdown load
     principal_id = session.get("temp_principal_id")
+    teacher_id = session.get("teacher_id")
     departments = Department.query.filter_by(
-        principal_id=principal_id
+        principal_id=principal_id,
+        teacher_id=teacher_id
     ).all()
 
     student_form.department_id.choices = [

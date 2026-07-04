@@ -24,9 +24,10 @@ def edit_student(student_id):
     form = AddStudentForm(obj=student_data)
 
     principal_id = session.get("temp_principal_id")
-
+    teacher_id = session.get("teacher_id")
     departments = Department.query.filter_by(
-        principal_id=principal_id
+        principal_id=principal_id,
+        teacher_id=teacher_id
     ).all()
 
     form.department_id.choices = [
