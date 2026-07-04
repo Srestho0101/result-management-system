@@ -2,18 +2,11 @@
 {% block title %} View Student Details {% endblock %}
 {% block content %}
 
-h2> Teacher Details </h2>
+<h2>Student Details</h2>
 
 
-<p>ID: {{teacher.teacher_id }} </p>
-<p>First Name: {{teacher.first_name }} </p>
-<p>Last Name: {{teacher.last_name }} </p>
-<p>Institute Name: {{teacher.institute }} </p>
-<p>Institute code: {{teacher.institute_code }} </p>
-<p>Phone: {{teacher.phone}} </p>
-<p>Email: {{teacher.email }} </p>
-<p>username: {{teacher.username }} </p>
-<p>password: {{teacher.password }} </p>
-
-
+<p>ID: {{student.student_roll }} </p>
+<p>Full Name: {{student.student_full_name }} </p>
+<p>Semester: {{student.semester}} </p>
+<p>Group: {{student.group }}</p>
 {% endblock %}

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, session, redirect, url_for, flash
 from app.models import teacher
 from app.models.teacher import AddStudentInfo,MarksTopic
-from app.models.assign import Department
+from app.models.assign import Department,Subjects
 from app.utils.add_student_form import SelectSemesterAndDepartmentForm
 from app.utils.marks_forms import MarksTopicForm
 from app.extensions import db
@@ -62,17 +62,27 @@ def show_student():
         student_data=student_data
     )
 
-@get_marks_bp.route("/",methods=["GET","POST"])
+@get_marks_bp.route("/add_marks_topic",methods=["GET","POST"])
 def get_marks_topic_name():
     if not session.get("teacher"):
         return redirect(url_for("login.login"))
     
     form = MarksTopicForm()
+    principal_id = session.get("temp_principal_id")
+    subjects = Subjects.query.filter_by(
+        principal_id=principal_id
+    ).all()
+    form.subject.choices = [
+        (s.subject_id, f"{s.subject_code} - {s.subject_name}")  
+        for s in subjects
+    ]
     if form.validate_on_submit():
         teacher_id = session.get("teacher_id")
 
         marks_topic = MarksTopic(
             marks_topic_name=form.add_marks_topic_name.data,
+            full_marks=form.full_marks.data,
+            subject_id=form.subject.data,
             teacher_id=teacher_id
         )
 
@@ -125,7 +135,7 @@ def edit_mark_topic(marks_topic_id):
 
     return render_template("teacher/get_marks_system/edit_mark_topic.html", form=form, marks_topic_name=marks_topic_name)
 
-@get_marks_bp.route("/teacher<int:marks_topic_id>/delete")
+@get_marks_bp.route("/teacher<int:marks_topic_id>/delete",methods=["POST"])
 def delete_mark_topic(marks_topic_id):
     if not session.get("teacher"):
         return redirect(url_for("login.login"))

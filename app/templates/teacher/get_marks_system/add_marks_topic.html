@@ -19,12 +19,22 @@ Marks Topic Name
             <form method="POST">
 
                 {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    {{ form.subject.label(class="form-label") }}
+                    {{ form.subject(class="form-select") }}
+                </div>
 
                 <div class="mb-3">
                     {{ form.add_marks_topic_name.label(class="form-label") }}
                     {{ form.add_marks_topic_name(class="form-control") }}
                 </div>
 
+                <div class="mb-3">
+                    {{ form.full_marks.label(class="form-label") }}
+                    {{ form.full_marks(class="form-control") }}
+                </div>
+
+                
                 <div class="mb-3">
                     {{ form.submit(class="btn btn-primary") }}
                 </div>
