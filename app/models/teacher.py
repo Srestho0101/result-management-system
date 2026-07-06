@@ -31,7 +31,6 @@ class Attendance(db.Model):
 
 class MarksTopic(db.Model):
     __tablename__ = "marks_topic"
-
     marks_topic_id = db.Column(
         db.Integer,
         primary_key=True
