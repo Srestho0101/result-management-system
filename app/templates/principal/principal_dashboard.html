@@ -1,22 +1,145 @@
 {% extends "base/base.html" %}
-{% block title %} Principal Dashboard {% endblock %}
+{% block title %}Principal Dashboard{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/colors.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+
 {% block content %}
 
-<div class="card ">
-    <h1>Welcome to principal Dashboard </h1>
+<!-- Decorative blobs -->
+<div class="dash-blob dash-blob-1"></div>
+<div class="dash-blob dash-blob-2"></div>
 
-    <ul class="make_list card box-shadow">
-        <li><a href="{{ url_for('add_teacher.add_teachers')}}">Add Teacher</a></li>
-        <li><a href="{{ url_for('view_teachers.view_teachers')}}">Views Teachers</a></li>
-        <li><a href="{{ url_for('edit_teacher.edit_tecaher_view')}}">Edit Teacher</a></li>
-        <li><a href="{{ url_for('assign_subject_dashboard.assign_subject_dashboard')}}">Assign Dashboard</a></li>
-    </ul>
-    <div class="box">
-        <h2>Total teachers {{ total_teachers }}</h2>
+<!-- ── TOP HEADER ── -->
+<header class="dash-header">
+  <div class="dash-header-left">
+    <div class="dash-avatar">P</div>
+    <div>
+      <p class="dash-greeting">Good day,</p>
+      <h1 class="dash-title">Principal Dashboard</h1>
+    </div>
+  </div>
+  <div class="dash-header-right">
+    <span class="dash-badge">Principal</span>
+    <a href="{{ url_for('login.logout_principal') }}" class="btn btn-outline btn-sm">Sign out</a>
+  </div>
+</header>
 
+<!-- ── STATS ROW ── -->
+<section class="dash-stats" aria-label="Summary statistics">
+
+  <div class="stat-card stat-primary anim-slide" style="--delay:.05s">
+    <div class="stat-icon">👨‍🏫</div>
+    <div class="stat-body">
+      <span class="stat-label">Total Teachers</span>
+      <span class="stat-value">{{ total_teachers }}</span>
+    </div>
+    <div class="stat-glow"></div>
+  </div>
+
+  <div class="stat-card stat-indigo anim-slide" style="--delay:.12s">
+    <div class="stat-icon">🎓</div>
+    <div class="stat-body">
+      <span class="stat-label">Total Students</span>
+      <span class="stat-value">{{ total_students }}</span>
+    </div>
+    <div class="stat-glow"></div>
+  </div>
+
+  <div class="stat-card stat-amber anim-slide" style="--delay:.19s">
+    <div class="stat-icon">📋</div>
+    <div class="stat-body">
+      <span class="stat-label">Pending Results</span>
+      <span class="stat-value">—</span>
+    </div>
+    <div class="stat-glow"></div>
+  </div>
+
+</section>
+
+<!-- ── MAIN GRID ── -->
+<div class="dash-grid">
+
+  <!-- Quick Actions -->
+  <section class="dash-panel anim-slide" style="--delay:.33s" aria-label="Quick actions">
+    <div class="panel-header">
+      <h2 class="panel-title">Quick Actions</h2>
+      <span class="panel-chip">Management</span>
     </div>
 
-    <a href="{{ url_for("login.logout_principal")}}" class="btn btn-danger">Logout </a>
+    <nav class="action-list" aria-label="Dashboard navigation">
+
+      <a href="{{ url_for('add_teacher.add_teachers') }}" class="action-item action-blue">
+        <span class="action-icon-wrap">➕</span>
+        <div class="action-text">
+          <span class="action-name">Add Teacher</span>
+          <span class="action-desc">Register a new teacher to the system</span>
+        </div>
+        <span class="action-arrow">→</span>
+      </a>
+
+      <a href="{{ url_for('view_teachers.view_teachers') }}" class="action-item action-teal">
+        <span class="action-icon-wrap">📋</span>
+        <div class="action-text">
+          <span class="action-name">View Teachers</span>
+          <span class="action-desc">Browse the complete teacher roster</span>
+        </div>
+        <span class="action-arrow">→</span>
+      </a>
+
+      <a href="{{ url_for('edit_teacher.edit_tecaher_view') }}" class="action-item action-indigo">
+        <span class="action-icon-wrap">✏️</span>
+        <div class="action-text">
+          <span class="action-name">Edit Teacher</span>
+          <span class="action-desc">Modify existing teacher details</span>
+        </div>
+        <span class="action-arrow">→</span>
+      </a>
+
+      <a href="{{ url_for('assign_subject_dashboard.assign_subject_dashboard') }}" class="action-item action-purple">
+        <span class="action-icon-wrap">📚</span>
+        <div class="action-text">
+          <span class="action-name">Assign Subject</span>
+          <span class="action-desc">Assign subjects to teachers</span>
+        </div>
+        <span class="action-arrow">→</span>
+      </a>
+
+    </nav>
+  </section>
+
+  <!-- System Overview Panel -->
+  <aside class="dash-side" aria-label="System overview">
+
+    <!-- Help card -->
+    <div class="help-card anim-slide" style="--delay:.44s">
+      <p class="help-label">Need help?</p>
+      <p class="help-sub">View the full documentation or contact system support.</p>
+      <a href="#" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;">Documentation</a>
+    </div>
+
+  </aside>
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Staggered entrance via Intersection Observer
+  document.addEventListener('DOMContentLoaded', () => {
+    const items = document.querySelectorAll('.anim-slide');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    items.forEach(el => io.observe(el));
+  });
+</script>
 {% endblock %}
