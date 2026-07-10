@@ -1,11 +1,41 @@
 {% extends "base/base.html" %}
 {% block title %} Add teacher {% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/colors.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add_teacher.css') }}">
+{% endblock %}
+
 {% block content %}
+
+<div class="at-page-header">
+    <div class="at-header-left">
+        <div class="at-header-icon">👨‍🏫</div>
+        <div>
+            <h1>Add New Teacher</h1>
+            <p>Fill in the details below to register a teacher to the system</p>
+        </div>
+    </div>
+    <a href="{{ url_for('principal_dashboard.principal_dashboard') }}" class="at-back-btn">
+        <span>&larr;</span> Back to Dashboard
+    </a>
+</div>
 
 <div class="card form-box">
 
+    <div class="at-banner">
+        <h2>Teacher Registration Form</h2>
+        <p>All fields marked <span class="at-required">*</span> are required</p>
+    </div>
+
     <form method="POST">
         {{ add_teacher_form.hidden_tag() }}
+
+        <div class="at-section-title">
+            <span class="at-step">01</span>
+            <span>PERSONAL INFORMATION</span>
+        </div>
 
         <div class="mb-3">
             {{ add_teacher_form.teacher_id.label(class="ap-label")}}
@@ -19,6 +49,12 @@
             {{ add_teacher_form.last_name.label(class="ap-label")}}
             {{ add_teacher_form.last_name(class="form-control")}}
         </div>
+
+        <div class="at-section-title">
+            <span class="at-step">02</span>
+            <span>INSTITUTE DETAILS</span>
+        </div>
+
         <div class="mb-3">
             {{ add_teacher_form.institute.label(class="ap-label")}}
             {{ add_teacher_form.institute(class="form-control")}}
@@ -27,6 +63,12 @@
             {{ add_teacher_form.institute_code.label(class="ap-label")}}
             {{ add_teacher_form.institute_code(class="form-control")}}
         </div>
+
+        <div class="at-section-title">
+            <span class="at-step">03</span>
+            <span>CONTACT INFORMATION</span>
+        </div>
+
         <div class="mb-3">
             {{ add_teacher_form.phone.label(class="ap-label")}}
             {{ add_teacher_form.phone(class="form-control")}}
@@ -35,6 +77,12 @@
             {{ add_teacher_form.email.label(class="ap-label")}}
             {{ add_teacher_form.email(class="form-control")}}
         </div>
+
+        <div class="at-section-title">
+            <span class="at-step">04</span>
+            <span>ACCOUNT CREDENTIALS</span>
+        </div>
+
         <div class="mb-3">
             {{ add_teacher_form.username.label(class="ap-label")}}
             {{ add_teacher_form.username(class="form-control")}}
@@ -48,9 +96,9 @@
             {{ add_teacher_form.retype_password (class="form-control")}}
         </div>
 
-        <div class="mb-3">
-            {{ add_teacher_form.submit() }}
-            
+        <div class="mb-3 form-actions">
+            <a href="{{ url_for('principal_dashboard.principal_dashboard') }}" class="btn-cancel">Cancel</a>
+            {{ add_teacher_form.submit(value="Add Teacher", class="btn-submit") }}
         </div>
 
     </form>
