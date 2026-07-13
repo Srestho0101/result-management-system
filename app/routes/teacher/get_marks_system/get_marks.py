@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, session, redirect, url_for, flash
 from app.models import teacher
 from app.models.teacher import AddStudentInfo,MarksTopic
-from app.models.assign import Department
+from app.models.assign import Department,Subjects
 from app.utils.add_student_form import SelectSemesterAndDepartmentForm
 from app.utils.marks_forms import MarksTopicForm
 from app.extensions import db
@@ -31,7 +31,6 @@ def show_student():
         (d.department_id, f"{d.department_code} - {d.department_name}")
         for d in departments
     ]
-
     students = AddStudentInfo.query.filter_by(
         teacher_id=teacher_id
     ).all()
@@ -63,17 +62,34 @@ def show_student():
         student_data=student_data
     )
 
-@get_marks_bp.route("/",methods=["GET","POST"])
+@get_marks_bp.route("/add_marks_topic",methods=["GET","POST"])
 def get_marks_topic_name():
     if not session.get("teacher"):
         return redirect(url_for("login.login"))
     
     form = MarksTopicForm()
+    principal_id = session.get("temp_principal_id")
+    teacher_id = session.get("teacher_id")
+    subjects = Subjects.query.filter_by(
+        principal_id=principal_id,
+        teacher_id=teacher_id
+    ).all()
+    form.subject.choices = [
+        (s.subject_id, f"{s.subject_code} - {s.subject_name}")  
+        for s in subjects
+    ]
+
+    form.department_id.choices = [
+        (d.department_id, f"{d.department_code} - {d.department_name}")
+        for d in Department.query.filter_by(principal_id=principal_id,teacher_id=teacher_id).all()
+    ]
     if form.validate_on_submit():
         teacher_id = session.get("teacher_id")
 
         marks_topic = MarksTopic(
             marks_topic_name=form.add_marks_topic_name.data,
+            full_marks=form.full_marks.data,
+            subject_id=form.subject.data,
             teacher_id=teacher_id
         )
 
@@ -104,11 +120,11 @@ def show_marks_system():
         marks_topic_name=marks_topic_name
     )
 
-@get_marks_bp.route("/teacher<int:marks_topic_id>/edit", methods=["GET", "POST"]) # 1. Added methods
+@get_marks_bp.route("/teacher<int:marks_topic_id>/edit", methods=["GET", "POST"])
 def edit_mark_topic(marks_topic_id):
     if not session.get("teacher"):
         return redirect(url_for("login.login"))
-    
+
     marks_topic_name = MarksTopic.query.get_or_404(marks_topic_id)
     form = MarksTopicForm(obj=marks_topic_name)
 
@@ -117,12 +133,32 @@ def edit_mark_topic(marks_topic_id):
             marks_topic_name.marks_topic_name = form.add_marks_topic_name.data
             db.session.commit()
             flash("Editing successfully", "success")
-            # 2. Redirect after a successful POST request
-            return redirect(url_for("get_marks.show_marks_system")) 
-            
+
+            return redirect(url_for("get_marks.show_marks_system"))
+
     except Exception as e:
-        db.session.rollback() # Good practice: roll back on error
+        db.session.rollback()
         flash(f"Error: Editing Mark topic name {str(e)}", "danger")
 
-    # 3. Return the rendered template for GET requests (or if validation fails)
-    return render_template("teacher/get_marks_system/edit_mark_topic.html", form=form, marks_topic_name=marks_topic_name)
+    return render_template(
+        "teacher/get_marks_system/edit_mark_topic.html",
+        form=form,
+        marks_topic_name=marks_topic_name
+    )
+
+
+@get_marks_bp.route("/teacher<int:marks_topic_id>/delete", methods=["POST"])
+def delete_mark_topic(marks_topic_id):
+    if not session.get("teacher"):
+        return redirect(url_for("login.login"))
+
+    try:
+        marks_topic_name = MarksTopic.query.get_or_404(marks_topic_id)
+        db.session.delete(marks_topic_name)
+        db.session.commit()
+        flash("Marks topic deleted successfully", "success")
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Error: Deleting Mark topic name {str(e)}", "danger")
+
+    return redirect(url_for("get_marks.show_marks_system"))

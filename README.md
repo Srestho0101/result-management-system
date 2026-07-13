@@ -173,3 +173,8 @@ Once the project is complete, update this README with:
 ---
 
 This document was created from the current project implementation and is ready to be updated as the app evolves.
+
+## Authors
+
+- Rakib Hossen
+- Aronno Rahman Arpa

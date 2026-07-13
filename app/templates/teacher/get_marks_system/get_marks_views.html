@@ -44,7 +44,7 @@ block content %}
           <tr>
             <th width="20%">Roll</th>
             <th>Name</th>
-            <th width="20%">Details</th>
+            <th width="20%">Actions</th>
           </tr>
         </thead>
 
@@ -58,10 +58,16 @@ block content %}
 
             <td>
               <a
-                href="#"
+                href="{{ url_for('view_student_details.view_student_details', student_id=s.student_id) }}"
                 class="btn btn-success btn-sm"
               >
                 Views
+              </a>
+              <a
+                href="{{ url_for('add_marks.add_marks', student_id=s.student_id) }}"
+                class="btn btn-success btn-sm"
+              >
+                Add marks
               </a>
             </td>
           </tr>
