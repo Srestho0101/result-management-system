@@ -53,12 +53,12 @@ def edit_subject(subject_id):
         subject = subject
     )
 
-@assign_subject_dashboard_bp.route("/department/<int:department_code>/edit",methods=["GET","POST"])
-def edit_department(department_code):
+@assign_subject_dashboard_bp.route("/department/<int:department_id>/edit",methods=["GET","POST"])
+def edit_department(department_id):
     if not session.get("principal_id"):
         return redirect(url_for("login.login"))
 
-    department = Department.query.get_or_404(department_code)
+    department = Department.query.get_or_404(department_id)
     form =  DepartmentForm(obj=department)  
 
     if form.validate_on_submit():
@@ -93,9 +93,9 @@ def delete_subject(subject_id):
     return redirect(url_for('assign_subject_dashboard.assign_subject_dashboard'))
 
 
-@assign_subject_dashboard_bp.route("/department/<int:department_code>/delete", methods=["POST"])
-def delete_department(department_code):
-    department= Department.query.get_or_404(department_code)
+@assign_subject_dashboard_bp.route("/department/<int:department_id>/delete", methods=["POST"])
+def delete_department(department_id):
+    department= Department.query.get_or_404(department_id)
 
     try:
         db.session.delete(department)   
