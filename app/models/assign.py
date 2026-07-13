@@ -29,6 +29,12 @@ class Department(db.Model):
         db.ForeignKey("principal_info.principal_id"),
         nullable=False
     )
+
+
+    teacher_id = db.Column(
+        db.Integer,
+        db.ForeignKey("teacher_info.teacher_id")
+    )
     __table_args__ = (
         db.UniqueConstraint(
             "principal_id",
@@ -66,6 +72,10 @@ class Subjects(db.Model):
         nullable=False
     )
 
+    teacher_id = db.Column(
+        db.Integer,
+        db.ForeignKey("teacher_info.teacher_id")
+    )
     __table_args__ = (
         db.UniqueConstraint(
             "principal_id",
