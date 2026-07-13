@@ -164,7 +164,7 @@ The current code contains some areas to improve before final release:
 
 Once the project is complete, update this README with:
 
-- full dependency list[text](../spra/Result_Management_System/README.md)
+- full dependency list
 - installation and usage steps for production
 - new feature descriptions
 - testing commands
@@ -174,6 +174,7 @@ Once the project is complete, update this README with:
 
 This document was created from the current project implementation and is ready to be updated as the app evolves.
 
-## Author 
+## Authors
+
 - Rakib Hossen
 - Aronno Rahman Arpa
