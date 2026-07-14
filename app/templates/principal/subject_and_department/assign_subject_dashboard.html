@@ -1,23 +1,159 @@
-{% extends "base/base.html"%}
-{% block title%} Assign Subject dashoard {% endblock %}
-{% block content%}
+{% extends "base/base.html" %}
+{% block title %}Assign Subject Dashboard{% endblock %}
 
-<div class="box box-shadow">
-    <h2> Assign Subject dashoard</h2>
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/colors.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/assign_subject_dashboard.css') }}">
+{% endblock %}
 
-    <nav>
-        <ul>
-            <li><a href="{{ url_for('assign_subject.add_department')}}">Add Department</a></li>
-            <li><a href="{{url_for('assign_subject.add_subject')}}">Add Subject</a></li>
-            <li><a href="{{ url_for('assign_subject.assign_subject')}}">Assign Subject</a></li>
-            <li><a href="{{ url_for('show_subjects.show_subjects')}}">Show Subject</a></li>
-            <li><a href="{{ url_for('show_subjects.show_department')}}">Show Department </a></li>
-            <li><a href="{{ url_for('assign_teacher.assign_teacher')}}">Assign Teacher</a></li>
-        </ul>
+{% block content %}
 
-    </nav>
+<!-- Decorative blobs -->
+<div class="asd-blob asd-blob-1"></div>
+<div class="asd-blob asd-blob-2"></div>
 
-    <h3>total subject: {{total_subject}} </h3>
-    <h3>total Department: {{total_department}}</h3>
+<div class="asd-wrap">
+
+  <!-- ── HEADER ── -->
+  <div class="asd-header asd-slide" style="--delay:.05s">
+    <div class="asd-header-left">
+      <span class="asd-header-icon">📚</span>
+      <div class="asd-header-text">
+        <h1 class="asd-title">Assign Subject Dashboard</h1>
+        <p class="asd-sub">Set up departments and subjects, then assign them to teachers.</p>
+      </div>
+    </div>
+
+    <div class="asd-header-right">
+      <a href="{{ url_for('principal_dashboard.principal_dashboard') }}" class="asd-back">
+        <span>←</span>
+        <span>Dashboard</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ── STATS + WORKFLOW RAIL ── -->
+  <div class="asd-stats-row asd-slide" style="--delay:.08s">
+    <div class="asd-rail">
+      <div class="asd-rail-step is-active">
+        <span class="asd-rail-num">1</span>
+        <span>Setup</span>
+      </div>
+      <span class="asd-rail-arrow">→</span>
+      <div class="asd-rail-step">
+        <span class="asd-rail-num">2</span>
+        <span>Assign</span>
+      </div>
+      <span class="asd-rail-arrow">→</span>
+      <div class="asd-rail-step">
+        <span class="asd-rail-num">3</span>
+        <span>Review</span>
+      </div>
+    </div>
+
+    <div class="asd-chips">
+      <div class="asd-chip asd-chip-subjects">
+        <span class="asd-chip-icon">📚</span>
+        <span>
+          <span class="asd-chip-label">Subjects</span>
+          <span class="asd-chip-value">{{total_subject}}</span>
+        </span>
+      </div>
+      <div class="asd-chip asd-chip-departments">
+        <span class="asd-chip-icon">🏛️</span>
+        <span>
+          <span class="asd-chip-label">Departments</span>
+          <span class="asd-chip-value">{{total_department}}</span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── GROUPS ── -->
+  <div class="asd-groups">
+
+    <!-- Setup -->
+    <section class="asd-group asd-group-setup asd-slide" style="--delay:.16s" aria-label="Setup">
+      <div class="asd-group-head">
+        <span class="asd-group-icon">🧩</span>
+        <div>
+          <h2 class="asd-group-title">Setup</h2>
+          <p class="asd-group-desc">Create the building blocks</p>
+        </div>
+      </div>
+
+      <a href="{{ url_for('assign_subject.add_department') }}" class="asd-tile">
+        <span class="asd-tile-dot"></span>
+        <span class="asd-tile-name">Add Department</span>
+        <span class="asd-tile-arrow">→</span>
+      </a>
+      <a href="{{ url_for('assign_subject.add_subject') }}" class="asd-tile">
+        <span class="asd-tile-dot"></span>
+        <span class="asd-tile-name">Add Subject</span>
+        <span class="asd-tile-arrow">→</span>
+      </a>
+    </section>
+
+    <!-- Assign -->
+    <section class="asd-group asd-group-assign asd-slide" style="--delay:.22s" aria-label="Assign">
+      <div class="asd-group-head">
+        <span class="asd-group-icon">🔗</span>
+        <div>
+          <h2 class="asd-group-title">Assign</h2>
+          <p class="asd-group-desc">Link subjects to teachers</p>
+        </div>
+      </div>
+
+      <a href="{{ url_for('assign_subject.assign_subject') }}" class="asd-tile">
+        <span class="asd-tile-dot"></span>
+        <span class="asd-tile-name">Assign Subject</span>
+        <span class="asd-tile-arrow">→</span>
+      </a>
+      <a href="{{ url_for('assign_teacher.assign_teacher') }}" class="asd-tile">
+        <span class="asd-tile-dot"></span>
+        <span class="asd-tile-name">Assign Teacher</span>
+        <span class="asd-tile-arrow">→</span>
+      </a>
+    </section>
+
+    <!-- View -->
+    <section class="asd-group asd-group-view asd-slide" style="--delay:.28s" aria-label="View">
+      <div class="asd-group-head">
+        <span class="asd-group-icon">👁️</span>
+        <div>
+          <h2 class="asd-group-title">View</h2>
+          <p class="asd-group-desc">Check what's already set up</p>
+        </div>
+      </div>
+
+      <a href="{{ url_for('show_subjects.show_subjects') }}" class="asd-tile">
+        <span class="asd-tile-dot"></span>
+        <span class="asd-tile-name">Show Subject</span>
+        <span class="asd-tile-arrow">→</span>
+      </a>
+      <a href="{{ url_for('show_subjects.show_department') }}" class="asd-tile">
+        <span class="asd-tile-dot"></span>
+        <span class="asd-tile-name">Show Department</span>
+        <span class="asd-tile-arrow">→</span>
+      </a>
+    </section>
+
+  </div>
+
 </div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Reveal immediately on load (staggered via each element's --delay)
+    // instead of waiting for scroll into view — avoids elements getting
+    // stuck at opacity:0 when they're already in the viewport on load.
+    document.querySelectorAll('.asd-slide').forEach(el => {
+      requestAnimationFrame(() => el.classList.add('visible'));
+    });
+  });
+</script>
 {% endblock %}
