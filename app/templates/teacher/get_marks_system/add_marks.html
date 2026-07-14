@@ -1,0 +1,52 @@
+{% extends "base/base.html" %}
+
+{% block title %}
+Add Marks
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<div class="card shadow">
+
+<div class="card-header">
+<h4>Add Marks</h4>
+</div>
+
+<div class="card-body">
+
+<h5>{{ student.student_roll }} - {{ student.student_full_name }}</h5>
+
+<form method="POST">
+
+{{ form.hidden_tag() }}
+
+<div class="mb-3">
+{{ form.subject.label }}
+{{ form.subject(class="form-select") }}
+</div>
+
+
+
+<div class="mb-3">
+{{ form.mart_topic.label }}
+{{ form.mart_topic(class="form-select") }}
+</div>
+
+<div class="mb-3">
+{{ form.get_marks.label }}
+{{ form.get_marks(class="form-control") }}
+</div>
+
+{{ form.submit(class="btn btn-success") }}
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}
