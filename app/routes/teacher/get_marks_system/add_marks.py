@@ -1,10 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, session, flash
-from app.models.assign import Subjects
-from app.models.teacher import (
-    AddStudentInfo,
-    MarksTopic,
-    AddMarks
-)
+from app.models.assign import Subjects, TeacherAssignment
+from app.models.teacher import AddStudentInfo, MarksTopic, AddMarks
 from app.utils.add_marks_form import AddMarksForm
 from app.extensions import db
 
@@ -14,6 +10,7 @@ add_marks_bp = Blueprint(
     url_prefix="/add_marks"
 )
 
+
 @add_marks_bp.route("/teacher/<int:student_id>", methods=["GET", "POST"])
 def add_marks(student_id):
 
@@ -21,14 +18,25 @@ def add_marks(student_id):
         return redirect(url_for("login.login"))
 
     teacher_id = session.get("teacher_id")
-    principal_id = session.get("temp_principal_id")
     student = AddStudentInfo.query.get_or_404(student_id)
 
     form = AddMarksForm()
 
-    subjects = Subjects.query.filter_by(
-        principal_id=principal_id
-    ).all()
+    # ==========================
+    # Subject Dropdown
+    # ==========================
+    subjects = (
+        db.session.query(Subjects)
+        .join(
+            TeacherAssignment,
+            TeacherAssignment.subject_id == Subjects.subject_id
+        )
+        .filter(
+            TeacherAssignment.teacher_id == teacher_id
+        )
+        .distinct()
+        .all()
+    )
 
     form.subject.choices = [
         (
@@ -38,31 +46,36 @@ def add_marks(student_id):
         for s in subjects
     ]
 
-    topics = MarksTopic.query.filter_by(
-        teacher_id=teacher_id
-    ).all()
 
-    form.mart_topic.choices = [
-        (
-            t.marks_topic_id,
-            f"{t.marks_topic_name} ({t.full_marks})"
-        )
-        for t in topics
-    ]
+    if form.subject.data:
 
+        topics = MarksTopic.query.filter_by(
+            teacher_id=teacher_id,
+            subject_id=form.subject.data
+        ).all()
+
+        form.marks_topic.choices = [
+            (
+                t.marks_topic_id,
+                f"{t.marks_topic_name} ({t.full_marks})"
+            )
+            for t in topics
+        ]
+
+    else:
+        form.marks_topic.choices = []
+
+    
     if form.validate_on_submit():
 
         existing = AddMarks.query.filter_by(
             student_id=student.student_id,
             subject_id=form.subject.data,
-            marks_topic_id=form.mart_topic.data
+            marks_topic_id=form.marks_topic.data
         ).first()
 
         if existing:
-            flash(
-                "Marks already exists.",
-                "warning"
-            )
+            flash("Marks already exists.", "warning")
             return redirect(
                 url_for(
                     "add_marks.add_marks",
@@ -74,21 +87,15 @@ def add_marks(student_id):
             student_id=student.student_id,
             subject_id=form.subject.data,
             teacher_id=teacher_id,
-            marks_topic_id=form.mart_topic.data,
+            marks_topic_id=form.marks_topic.data,
             obtained_marks=form.get_marks.data
         )
 
         db.session.add(mark)
         db.session.commit()
 
-        flash(
-            "Marks Added Successfully",
-            "success"
-        )
-
-        return redirect(
-            url_for("get_marks.show_student")
-        )
+        flash("Marks Added Successfully", "success")
+        return redirect(url_for("get_marks.show_student"))
 
     return render_template(
         "teacher/get_marks_system/add_marks.html",

@@ -8,45 +8,103 @@ Add Marks
 
 <div class="container mt-4">
 
-<div class="card shadow">
+    <div class="card shadow">
 
-<div class="card-header">
-<h4>Add Marks</h4>
+        <div class="card-header">
+            <h4>Add Marks</h4>
+        </div>
+
+        <div class="card-body">
+
+            <h5>{{ student.student_roll }} - {{ student.student_full_name }}</h5>
+
+            <form method="POST">
+
+                {{ form.hidden_tag() }}
+
+                <!-- Subject -->
+                <div class="mb-3">
+                    {{ form.subject.label(class="form-label") }}
+                    {{ form.subject(class="form-select", id="subject") }}
+                </div>
+
+                <!-- Marks Topic -->
+                <div class="mb-3">
+                    {{ form.marks_topic.label(class="form-label") }}
+                    {{ form.marks_topic(class="form-select", id="marks_topic") }}
+                </div>
+
+                <!-- Obtained Marks -->
+                <div class="mb-3">
+                    {{ form.get_marks.label(class="form-label") }}
+                    {{ form.get_marks(class="form-control") }}
+                </div>
+
+                {{ form.submit(class="btn btn-success") }}
+
+            </form>
+
+        </div>
+
+    </div>
+
 </div>
 
-<div class="card-body">
+<script>
 
-<h5>{{ student.student_roll }} - {{ student.student_full_name }}</h5>
+document.addEventListener("DOMContentLoaded", function () {
 
-<form method="POST">
+    const subject = document.getElementById("subject");
+    const marksTopic = document.getElementById("marks_topic");
 
-{{ form.hidden_tag() }}
+    marksTopic.innerHTML =
+        '<option value="">Select Marks Topic</option>';
 
-<div class="mb-3">
-{{ form.subject.label }}
-{{ form.subject(class="form-select") }}
-</div>
+    subject.addEventListener("change", function () {
 
+        const subjectId = this.value;
 
+        marksTopic.innerHTML =
+            '<option value="">Loading...</option>';
 
-<div class="mb-3">
-{{ form.mart_topic.label }}
-{{ form.mart_topic(class="form-select") }}
-</div>
+        if (!subjectId) {
+            marksTopic.innerHTML =
+                '<option value="">Select Marks Topic</option>';
+            return;
+        }
 
-<div class="mb-3">
-{{ form.get_marks.label }}
-{{ form.get_marks(class="form-control") }}
-</div>
+        fetch(`/get_marks_topic/api/marks-topic/${subjectId}`)
+            .then(response => response.json())
+            .then(data => {
 
-{{ form.submit(class="btn btn-success") }}
+                marksTopic.innerHTML =
+                    '<option value="">Select Marks Topic</option>';
 
-</form>
+                data.forEach(topic => {
 
-</div>
+                    const option = document.createElement("option");
 
-</div>
+                    option.value = topic.id;
+                    option.textContent = topic.name;
 
-</div>
+                    marksTopic.appendChild(option);
+
+                });
+
+            })
+            .catch(error => {
+
+                console.error(error);
+
+                marksTopic.innerHTML =
+                    '<option value="">Failed to load topics</option>';
+
+            });
+
+    });
+
+});
+
+</script>
 
 {% endblock %}

@@ -1,11 +1,11 @@
 from flask import Blueprint, redirect, render_template, request, url_for, flash, session
 from app.utils.form import LoginForm
-from app.models.assign import Department
 from app.models.admin import PrincipalDataInfo
 from app.models.principal import TeacherAddInfo
 from app.models.teacher import AddStudentInfo
 from app.utils.form import ShiftSelectForm
-
+from app.models.teacher import AddStudentInfo
+from app.utils.form import SearchForm
 
 login_bp = Blueprint("login", __name__, url_prefix="/login")
 
@@ -15,6 +15,7 @@ DEFAULT_PASSWORD = "admin123"
 @login_bp.route("/", methods=["GET", "POST"])
 def login():
     form = LoginForm()
+    
     if form.validate_on_submit():
         username = form.username.data
         password = form.password.data
@@ -56,6 +57,7 @@ def login():
                 url_for("teacher_dashboard.teacher_dashboard")
             )
     
+        
     flash("Invalid username and password","dengar")
 
 
