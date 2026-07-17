@@ -11,7 +11,7 @@ class AddMarksForm(FlaskForm):
         validators=[DataRequired()]
     )
 
-    mart_topic = SelectField(
+    marks_topic = SelectField(
         "Marks Topic",
         coerce=int,
         choices=[],

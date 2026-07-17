@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, session, redirect, url_for, flash
-from app.models import teacher
 from app.models.teacher import AddStudentInfo,MarksTopic
-from app.models.assign import Department,Subjects
+from app.models.assign import Department,Subjects,TeacherAssignment
 from app.utils.add_student_form import SelectSemesterAndDepartmentForm
 from app.utils.marks_forms import MarksTopicForm
 from app.extensions import db
@@ -62,29 +61,61 @@ def show_student():
         student_data=student_data
     )
 
-@get_marks_bp.route("/add_marks_topic",methods=["GET","POST"])
+@get_marks_bp.route("/add_marks_topic", methods=["GET", "POST"])
 def get_marks_topic_name():
     if not session.get("teacher"):
         return redirect(url_for("login.login"))
-    
+
     form = MarksTopicForm()
-    principal_id = session.get("temp_principal_id")
+
     teacher_id = session.get("teacher_id")
-    subjects = Subjects.query.filter_by(
-        principal_id=principal_id,
-        teacher_id=teacher_id
-    ).all()
+
+    # ==========================
+    # Subject List
+    # ==========================
+    subjects = (
+        db.session.query(Subjects)
+        .join(
+            TeacherAssignment,
+            TeacherAssignment.subject_id == Subjects.subject_id
+        )
+        .filter(
+            TeacherAssignment.teacher_id == teacher_id
+        )
+        .distinct()
+        .all()
+    )
+
     form.subject.choices = [
-        (s.subject_id, f"{s.subject_code} - {s.subject_name}")  
+        (s.subject_id, f"{s.subject_code} - {s.subject_name}")
         for s in subjects
     ]
 
+    # ==========================
+    # Department List
+    # ==========================
+    departments = (
+        db.session.query(Department)
+        .join(
+            TeacherAssignment,
+            TeacherAssignment.department_id == Department.department_id
+        )
+        .filter(
+            TeacherAssignment.teacher_id == teacher_id
+        )
+        .distinct()
+        .all()
+    )
+
     form.department_id.choices = [
         (d.department_id, f"{d.department_code} - {d.department_name}")
-        for d in Department.query.filter_by(principal_id=principal_id,teacher_id=teacher_id).all()
+        for d in departments
     ]
+
+    # ==========================
+    # Save Marks Topic
+    # ==========================
     if form.validate_on_submit():
-        teacher_id = session.get("teacher_id")
 
         marks_topic = MarksTopic(
             marks_topic_name=form.add_marks_topic_name.data,
@@ -95,15 +126,14 @@ def get_marks_topic_name():
 
         db.session.add(marks_topic)
         db.session.commit()
-        flash("Marks topic added successfully","success")
 
+        flash("Marks topic added successfully", "success")
         return redirect(url_for("get_marks.get_marks_topic_name"))
-    
+
     return render_template(
         "teacher/get_marks_system/add_marks_topic.html",
         form=form
     )
-
 
 @get_marks_bp.route("/show_marks_system")
 def show_marks_system():
