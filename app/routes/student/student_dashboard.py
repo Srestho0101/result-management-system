@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template,session,flash,redirect,url_for
 from app.models.teacher import AddStudentInfo
+from app.routes.student.auth_check import student_roll_check
 
 student_dashboard_bp = Blueprint(
     "student_dashboard",
@@ -9,9 +10,7 @@ student_dashboard_bp = Blueprint(
 
 @student_dashboard_bp.route("/")
 def student_dashboard():
-    if not session.get("student"):
-        flash("Please login first","danger")
-        return redirect(url_for("home.home"))
+    student_roll_check()
     
     student_id = session.get("student_id")
 

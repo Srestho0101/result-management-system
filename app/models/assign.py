@@ -72,6 +72,11 @@ class Subjects(db.Model):
         nullable=False
     )
 
+    student_id = db.Column(
+        db.Integer,
+        db.ForeignKey("student_data.student_id")
+    )
+
     teacher_id = db.Column(
         db.Integer,
         db.ForeignKey("teacher_info.teacher_id")
