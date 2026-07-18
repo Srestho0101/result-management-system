@@ -1,0 +1,78 @@
+{% extends "base/base.html" %}
+
+{% block title %}
+Subject Details
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow">
+
+        <div class="card-header">
+
+            <h3>
+                {{ subject.subject_code }} - {{ subject.subject_name }}
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-bordered table-striped">
+
+                <thead>
+
+                    <tr>
+                        <th>Topic</th>
+                        <th>Full Marks</th>
+                        <th>Obtained Marks</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for mark in marks %}
+
+                    <tr>
+
+                        <td>{{ mark.topic.marks_topic_name }}</td>
+
+                        <td>{{ mark.topic.full_marks }}</td>
+
+                        <td>{{ mark.obtained_marks }}</td>
+
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+
+                        <td colspan="3" class="text-center">
+                            No Marks Found
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+                <tfoot>
+                    <tr class="table-dark">
+                        <th>Total</th>
+                        <th>{{ total.full or 0 }}</th>
+                        <th>{{ total.obtained or 0 }}</th>
+                    </tr>
+                </tfoot>
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
