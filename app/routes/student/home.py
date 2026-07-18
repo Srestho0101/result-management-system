@@ -17,7 +17,7 @@ def home():
             return redirect(url_for("student_dashboard.student_dashboard"))
         else:
             flash("Invalid Roll","danger")
-            return redirect(url_for("login.login"))
+            return redirect(url_for("home.home"))
         
     return render_template(
         "home/home.html", 

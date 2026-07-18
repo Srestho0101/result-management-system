@@ -34,6 +34,7 @@ def create_app():
     from .routes.teacher.get_marks_system.marks_deatils import marks_details_bp
     from .routes.teacher.get_marks_system.get_marks_topic import get_marks_topic_bp
     from .routes.student.student_dashboard import student_dashboard_bp
+    from .routes.student.marks_details import subjects_marks_bp
 
     app.register_blueprint(home_bp) 
     app.register_blueprint(login_bp) 
@@ -61,5 +62,6 @@ def create_app():
     app.register_blueprint(marks_details_bp)
     app.register_blueprint(get_marks_topic_bp)
     app.register_blueprint(student_dashboard_bp)
+    app.register_blueprint(subjects_marks_bp)
     
     return app
