@@ -1,8 +1,7 @@
 from flask import Blueprint, render_template, session
 from sqlalchemy import func
-
 from app.routes.student.auth_check import student_roll_check
-from app.models.teacher import AddMarks
+from app.models.teacher import AddMarks,MarksTopic
 from app.models.assign import Subjects
 from app.extensions import db
 
@@ -15,11 +14,8 @@ subjects_marks_bp = Blueprint(
 
 @subjects_marks_bp.route("/")
 def subjects_marks():
-
     student_roll_check()
-
     student_id = session.get("student_id")
-
     subjects_marks = (
         db.session.query(
             Subjects.subject_id,
@@ -45,4 +41,46 @@ def subjects_marks():
     return render_template(
         "student/subjects_marks_details.html",
         subjects_marks=subjects_marks
+    )
+
+
+@subjects_marks_bp.route("/details/<int:subject_id>")
+def subject_details(subject_id):
+
+    student_roll_check()
+
+    student_id = session.get("student_id")
+
+    subject = Subjects.query.get_or_404(subject_id)
+
+    marks = (
+        AddMarks.query
+        .filter_by(
+            student_id=student_id,
+            subject_id=subject_id
+        )
+        .all()
+    )
+
+    total = (
+        db.session.query(
+            func.sum(MarksTopic.full_marks).label("full"),
+            func.sum(AddMarks.obtained_marks).label("obtained")
+        )
+        .join(
+            MarksTopic,
+            MarksTopic.marks_topic_id == AddMarks.marks_topic_id
+        )
+        .filter(
+            AddMarks.student_id == student_id,
+            AddMarks.subject_id == subject_id
+        )
+        .first()
+    )
+
+    return render_template(
+        "student/subject_details.html",
+        subject=subject,
+        marks=marks,
+        total=total
     )

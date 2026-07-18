@@ -42,10 +42,8 @@ Subjects Marks Details
                         <td>{{ subject.total_marks }}</td>
 
                         <td>
-                            <a
-                                href="#"
-                                class="btn btn-sm btn-primary"
-                            >
+                            <a href="{{ url_for('subjects_marks.subject_details', subject_id=subject.subject_id) }}"
+                                class="btn btn-sm btn-primary">
                                 View
                             </a>
                         </td>
