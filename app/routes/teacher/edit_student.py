@@ -46,17 +46,21 @@ def edit_student(student_id):
         for d in departments
     ]
 
-    if form.validate_on_submit():
-        student_data.student_roll = form.student_roll.data
-        student_data.student_full_name = form.student_full_name.data
-        student_data.department_id = form.department_id.data
-        student_data.semester = form.semester.data
-        student_data.group = form.group.data
+    try:
+        if form.validate_on_submit():
+            student_data.student_roll = form.student_roll.data
+            student_data.student_full_name = form.student_full_name.data
+            student_data.department_id = form.department_id.data
+            student_data.semester = form.semester.data
+            student_data.group = form.group.data
 
-        db.session.commit()
+            db.session.commit()
 
-        flash("Student Data Edited Successfully", "success")
-        return redirect(url_for("show_student.show_student"))
+            flash("Student Data Edited Successfully", "success")
+            return redirect(url_for("show_student.show_student"))
+    except Exception:
+        db.session.rollback()
+        flash("Somthing wrong","danger")
 
     return render_template(
         "teacher/edit_student.html",

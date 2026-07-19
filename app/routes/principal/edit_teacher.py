@@ -35,23 +35,25 @@ def edit_teacher(teacher_id):
     teacher =TeacherAddInfo.query.get_or_404(teacher_id)
     form = AddTecaherForm(obj=teacher)
 
-    if form.validate_on_submit():
+    try:
+        if form.validate_on_submit():
 
-        teacher.teacher_id = form.teacher_id.data
-        teacher.first_name = form.first_name.data
-        teacher.last_name = form.last_name.data
-        teacher.institute = form.institute.data 
-        teacher.institute_code = form.institute_code.data
-        teacher.phone = form.phone.data
-        teacher.email = form.email.data
-        teacher.username = form.username.data
-        teacher.password = form.password.data
-        
+            teacher.teacher_id = form.teacher_id.data
+            teacher.first_name = form.first_name.data
+            teacher.last_name = form.last_name.data
+            teacher.institute = form.institute.data 
+            teacher.institute_code = form.institute_code.data
+            teacher.phone = form.phone.data
+            teacher.email = form.email.data
+            teacher.username = form.username.data
+            teacher.password = form.password.data
 
-        db.session.commit()
-        flash("Teacher data edited!","success")
-
-        return redirect(url_for("principal_dashboard.principal_dashboard"))
+            db.session.commit()
+            flash("Teacher data edited!","success")
+            return redirect(url_for("principal_dashboard.principal_dashboard"))
+    except Exception as e:
+        db.session.rollback()
+        flash("Somthing wrong","danger")
 
     return render_template(
         "principal/edit_teacher.html",

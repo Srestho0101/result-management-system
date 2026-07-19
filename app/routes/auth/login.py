@@ -5,7 +5,8 @@ from app.models.principal import TeacherAddInfo
 from app.models.teacher import AddStudentInfo
 from app.utils.form import ShiftSelectForm
 from app.models.teacher import AddStudentInfo
-from app.utils.form import SearchForm
+from app.extensions import db
+
 
 login_bp = Blueprint("login", __name__, url_prefix="/login")
 
@@ -16,49 +17,52 @@ DEFAULT_PASSWORD = "admin123"
 def login():
     form = LoginForm()
     
-    if form.validate_on_submit():
-        username = form.username.data
-        password = form.password.data
-        if (username == DEFAULT_USERNAME and password == DEFAULT_PASSWORD):
-            session.clear()
-            session["admin"] = True
+    try:
+        if form.validate_on_submit():
+            username = form.username.data
+            password = form.password.data
+            if (username == DEFAULT_USERNAME and password == DEFAULT_PASSWORD):
+                session.clear()
+                session["admin"] = True
 
-            flash("Admin Login Successful","success")
-            return redirect(url_for("admin_dashboard.admin_dashboard"))
-
-        # Principal Login
-        principal = PrincipalDataInfo.query.filter_by(username=username,password=password).first()
-
-        if principal:
-            session.clear()
-            session["principal"] = True
-            session["temp_principal_id"] = principal.principal_id
-
-            return redirect(url_for("login.select_shift"))
-
-        flash("Invalid Username Or Password","danger")
-
-    # teacher login
-        teacher = TeacherAddInfo.query.filter_by(username=username,password=password).first()
-        student = AddStudentInfo.query.filter_by(teacher_id=teacher.teacher_id)
-        teacher = TeacherAddInfo.query.filter_by(
-            username=username,
-            password=password
-        ).first()
-
-        if teacher:
-            session.clear()
-            session["teacher"] = True
-            session["teacher_id"] = teacher.teacher_id
-            session["temp_principal_id"] = teacher.principal_id
-            flash("Login successfully", "success")
-
-            return redirect(
-                url_for("teacher_dashboard.teacher_dashboard")
-            )
+                flash("Admin Login Successful","success")
+                return redirect(url_for("admin_dashboard.admin_dashboard"))
     
-        
-    flash("Invalid username and password","dengar")
+
+            # Principal Login
+            principal = PrincipalDataInfo.query.filter_by(username=username,password=password).first()
+
+            if principal:
+                session.clear()
+                session["principal"] = True
+                session["temp_principal_id"] = principal.principal_id
+
+                return redirect(url_for("login.select_shift"))
+
+            
+
+        # teacher login
+            teacher = TeacherAddInfo.query.filter_by(username=username,password=password).first()
+            student = AddStudentInfo.query.filter_by(teacher_id=teacher.teacher_id)
+            teacher = TeacherAddInfo.query.filter_by(
+                username=username,
+                password=password
+            ).first()
+
+            if teacher:
+                session.clear()
+                session["teacher"] = True
+                session["teacher_id"] = teacher.teacher_id
+                session["temp_principal_id"] = teacher.principal_id
+                flash("Login successfully", "success")
+
+                return redirect(
+                    url_for("teacher_dashboard.teacher_dashboard")
+                )
+    
+    except Exception as e:
+        db.session.rollback()   
+        flash("Invalid username and password","danger")
 
 
     return render_template("auth/login.html",login_form=form)

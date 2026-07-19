@@ -14,6 +14,7 @@ from app.extensions import db
 from app.models.assign import Department
 from app.models.teacher import AddStudentInfo, Attendance
 from app.utils.attendance_form import AttendanceForm
+from app.routes.reuse_code import expetion_message
 
 attendance_bp = Blueprint(
     "attendence",
@@ -61,17 +62,22 @@ def attendance():
 
     student_data = []
 
-    if form.validate_on_submit():
+    try:
 
-        student_data = AddStudentInfo.query.filter_by(
-            teacher_id=teacher_id,
-            department_id=form.department_id.data,
-            semester=form.semester.data,
-            group=form.group.data
-        ).order_by(
-            AddStudentInfo.student_roll
-        ).all()
+        if form.validate_on_submit():
 
+            student_data = AddStudentInfo.query.filter_by(
+                teacher_id=teacher_id,
+                department_id=form.department_id.data,
+                semester=form.semester.data,
+                group=form.group.data
+            ).order_by(
+                AddStudentInfo.student_roll
+            ).all()
+    except Exception:
+        db.session.rollback()
+        flash("Somthing Worng","danger")
+        
     return render_template(
         "teacher/attendance.html",
         form=form,

@@ -19,9 +19,7 @@ def add_student():
 
     teacher_id = session.get("teacher_id")
     principal_id = session.get("temp_principal_id")
-
     student_form = AddStudentForm()
-
     assignments = TeacherAssignment.query.filter_by(
         teacher_id=teacher_id
     ).all()
@@ -33,7 +31,6 @@ def add_student():
         Department.principal_id == principal_id,
         Department.department_id.in_(department_ids)
     ).all()
-
     student_form.department_id.choices = [
         (
             d.department_id,
@@ -42,26 +39,30 @@ def add_student():
         for d in departments
     ]
 
-    if student_form.validate_on_submit():
+    try:
+        if student_form.validate_on_submit():
 
-        student = AddStudentInfo(
-            student_roll=student_form.student_roll.data,
-            student_full_name=student_form.student_full_name.data,
-            semester=student_form.semester.data,
-            group=student_form.group.data,
-            department_id=student_form.department_id.data,
-            teacher_id=teacher_id,
-            principal_id=principal_id
-        )
+            student = AddStudentInfo(
+                student_roll=student_form.student_roll.data,
+                student_full_name=student_form.student_full_name.data,
+                semester=student_form.semester.data,
+                group=student_form.group.data,
+                department_id=student_form.department_id.data,
+                teacher_id=teacher_id,
+                principal_id=principal_id
+            )
 
-        db.session.add(student)
-        db.session.commit()
+            db.session.add(student)
+            db.session.commit()
 
-        flash("Student added successfully", "success")
+            flash("Student added successfully", "success")
 
-        return redirect(
-            url_for("teacher_dashboard.teacher_dashboard")
-        )
+            return redirect(
+                url_for("teacher_dashboard.teacher_dashboard")
+            )
+    except Exception:
+        db.session.rollback()
+        flash("Somthing wrong","danger")
 
     return render_template(
         "teacher/add_student.html",
