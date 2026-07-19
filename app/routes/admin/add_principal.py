@@ -48,6 +48,7 @@ def add_principal():
 
             flash("Principal added successfully","success")
             return redirect(url_for("admin_dashboard.admin_dashboard"))
+        
     except Exception as e:
         flash("Principal alrady exist")
         return redirect(url_for("add_principal.add_principal"))
