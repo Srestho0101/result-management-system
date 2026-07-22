@@ -1,31 +1,178 @@
 {% extends "base/base.html" %}
-{% block title%} View Teachers {% endblock %}
+{% block title %}View Teachers{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/colors.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/view_teacher.css') }}">
+{% endblock %}
+
 {% block content %}
 
-<div class="container">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Teachers Id </th>
-                <th>Full Name</th>
-                <th>Details</th>
-            </tr>
-        </thead>
+<!-- Hero Bar -->
+<section class="tv-hero d-flex align-items-center justify-content-between flex-wrap gap-3 px-4 py-3 bg-white border-bottom sticky-top">
+  <div class="d-flex align-items-center gap-3">
+    <div class="tv-icon-box d-flex align-items-center justify-content-center rounded-3 fs-4">👨‍🏫</div>
+    <div>
+      <h1 class="tv-title fw-bold mb-0 fs-5">
+        All Teachers
+      </h1>
+      <p class="tv-subtitle text-muted mb-0">
+        Showing {{ teachers_data | length }} registered teacher{{ 's' if teachers_data | length != 1 }}
+      </p>
+    </div>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="{{ url_for('add_teacher.add_teachers') }}" class="btn btn-primary btn-sm">
+      + Add Teacher
+    </a>
+    <a href="{{ url_for('principal_dashboard.principal_dashboard') }}" class="btn btn-outline-secondary btn-sm">
+      ← Dashboard
+    </a>
+  </div>
+</section>
 
-        <tbody>
+<!-- Main content -->
+<div class="tv-container container-fluid px-4 py-4">
+
+  {% if teachers_data %}
+
+    <!-- Search bar -->
+    <div class="mb-3">
+      <input type="text" id="teacherSearch"
+             class="tv-search-input form-control"
+             placeholder="🔍  Search by name or ID…">
+    </div>
+
+    <!-- Card wrapping the table -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+
+      <!-- Card header -->
+      <div class="card-header bg-white border-bottom d-flex align-items-center justify-content-between py-3 px-4">
+        <span class="tv-card-header-label fw-semibold">Teacher Directory</span>
+        <span class="tv-badge-total badge rounded-pill">
+          {{ teachers_data | length }} total
+        </span>
+      </div>
+
+      <!-- Table -->
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0" id="teacherTable">
+          <thead class="tv-thead">
+            <tr>
+              <th class="tv-th px-4 py-3 fw-semibold text-muted text-uppercase">
+                #
+              </th>
+              <th class="tv-th px-3 py-3 fw-semibold text-muted text-uppercase">
+                Teacher ID
+              </th>
+              <th class="tv-th px-3 py-3 fw-semibold text-muted text-uppercase">
+                Full Name
+              </th>
+              <th class="tv-th px-3 py-3 fw-semibold text-muted text-uppercase text-center">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody>
             {% for teacher in teachers_data %}
-            <tr>
-                <td>{{ teacher.teacher_id}}</td>
-                <td>{{ teacher.first_name}} {{ teacher.last_name}}</td>
-                <td><a href="{{ url_for('teacher_details.teacher_details',teacher_id=teacher.teacher_id)}}">View</a></td>
+            <tr class="tv-row teacher-row border-bottom">
+              <!-- Row number -->
+              <td class="tv-td-num px-4 py-3 text-muted">
+                {{ loop.index }}
+              </td>
+
+              <!-- Teacher ID -->
+              <td class="px-3 py-3">
+                <span class="tv-id-badge badge rounded-pill px-3 py-2">
+                  {{ teacher.teacher_id }}
+                </span>
+              </td>
+
+              <!-- Name with avatar -->
+              <td class="px-3 py-3">
+                <div class="d-flex align-items-center gap-3">
+                  <!-- Initials avatar -->
+                  <div class="tv-avatar d-flex align-items-center justify-content-center rounded-circle fw-bold text-white flex-shrink-0">
+                    {{ teacher.first_name[0] | upper }}{{ teacher.last_name[0] | upper }}
+                  </div>
+                  <div>
+                    <p class="tv-name mb-0 fw-semibold">
+                      {{ teacher.first_name }} {{ teacher.last_name }}
+                    </p>
+                  </div>
+                </div>
+              </td>
+
+              <!-- Action -->
+              <td class="px-3 py-3 text-center">
+                <a href="{{ url_for('teacher_details.teacher_details', teacher_id=teacher.teacher_id) }}"
+                   class="tv-view-btn btn btn-sm fw-semibold">
+                  View →
+                </a>
+              </td>
             </tr>
-        </tbody>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
 
-        {% endfor %}
+      <!-- No results row (hidden by default, shown by JS) -->
+      <div id="noResults" class="tv-noresults d-none text-center py-5 text-muted">
+        <p class="fs-4 mb-1">🔍</p>
+        <p class="fw-semibold mb-0">No teachers match your search</p>
+        <p class="tv-noresults-sub">Try a different name or ID</p>
+      </div>
 
-    </table>
+      <!-- Card footer -->
+      <div class="tv-footer card-footer bg-white border-top py-2 px-4 text-muted">
+        Result Management System &mdash; Teacher Directory
+      </div>
+
+    </div><!-- /card -->
+
+  {% else %}
+
+    <!-- Empty state -->
+    <div class="card border-0 shadow-sm rounded-4 text-center py-5">
+      <div class="card-body py-5">
+        <div class="fs-1 mb-3">👨‍🏫</div>
+        <h3 class="tv-empty-title fw-bold mb-2">No Teachers Found</h3>
+        <p class="text-muted mb-4">There are no teachers registered in the system yet.</p>
+        <a href="{{ url_for('add_teacher.add_teacher') }}" class="btn btn-primary">
+          + Add First Teacher
+        </a>
+      </div>
+    </div>
+
+  {% endif %}
 
 </div>
 
+{% endblock %}
 
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const input    = document.getElementById('teacherSearch');
+  const rows     = document.querySelectorAll('.teacher-row');
+  const noResult = document.getElementById('noResults');
+
+  if (!input) return;
+
+  input.addEventListener('input', () => {
+    const q = input.value.trim().toLowerCase();
+    let visible = 0;
+
+    rows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      const show = !q || text.includes(q);
+      row.classList.toggle('d-none', !show);
+      if (show) visible++;
+    });
+
+    noResult && noResult.classList.toggle('d-none', visible > 0);
+  });
+});
+</script>
 {% endblock %}
