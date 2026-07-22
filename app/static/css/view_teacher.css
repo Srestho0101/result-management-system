@@ -1,0 +1,123 @@
+/* ==========================================================================
+   View Teachers — matches the "View Principals" reference design
+   Uses your existing CSS custom properties (--primary-light,
+   --gradient-primary, --text-dark, --border-color, --border-light,
+   --primary-color, --primary-rgba-20, --radius-lg, --off-white,
+   --transition-normal). Fallbacks provided in case a token is missing.
+   ========================================================================== */
+
+/* ---------- Hero bar ---------- */
+.tv-icon-box {
+    width: 48px;
+    height: 48px;
+    background: var(--primary-light, #eaf2ff);
+}
+
+.tv-title {
+    background: var(--gradient-primary, linear-gradient(135deg, #0d47f4, #12b7e8));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.tv-subtitle {
+    font-size: .82rem;
+}
+
+/* ---------- Main container ---------- */
+.tv-container {
+    max-width: 1100px;
+}
+
+/* ---------- Search input ---------- */
+.tv-search-input {
+    max-width: 340px;
+    border: 2px solid var(--border-color, #e3e6ea);
+    border-radius: var(--radius-lg, 10px);
+}
+
+/* ---------- Card header ---------- */
+.tv-card-header-label {
+    font-size: .9rem;
+    color: var(--text-dark, #1f2937);
+}
+
+.tv-badge-total {
+    background: var(--primary-light, #eaf2ff);
+    color: var(--primary-color, #1e6fe0);
+    font-size: .78rem;
+    padding: .35rem .75rem;
+}
+
+/* ---------- Table header ---------- */
+.tv-thead {
+    background: var(--off-white, #f7f9fc);
+}
+
+.tv-th {
+    font-size: .72rem;
+    letter-spacing: .6px;
+    border-bottom: 2px solid var(--border-light, #eef0f4);
+}
+
+/* ---------- Table rows ---------- */
+.tv-row {
+    border-color: var(--border-light, #eef0f4) !important;
+    transition: background .15s;
+}
+
+.tv-td-num {
+    font-size: .85rem;
+    width: 52px;
+}
+
+.tv-id-badge {
+    background: var(--primary-light, #eaf2ff);
+    color: var(--primary-color, #1e6fe0);
+    font-size: .82rem;
+    font-weight: 600;
+}
+
+.tv-avatar {
+    width: 38px;
+    height: 38px;
+    font-size: .82rem;
+    background: var(--gradient-primary, linear-gradient(135deg, #0d47f4, #12b7e8));
+    box-shadow: 0 2px 6px rgba(0, 102, 204, .25);
+}
+
+.tv-name {
+    font-size: .93rem;
+    color: var(--text-dark, #1f2937);
+}
+
+/* ---------- Action / View button ---------- */
+.tv-view-btn {
+    background: var(--primary-light, #eaf2ff);
+    color: var(--primary-color, #1e6fe0);
+    border: 1px solid var(--primary-rgba-20, rgba(30, 111, 224, .2));
+    border-radius: var(--radius-lg, 10px);
+    font-size: .82rem;
+    padding: .35rem .9rem;
+    transition: all var(--transition-normal, 0.15s ease);
+}
+
+.tv-view-btn:hover {
+    background: var(--primary-color, #1e6fe0);
+    color: #fff;
+}
+
+/* ---------- No-results state ---------- */
+.tv-noresults-sub {
+    font-size: .85rem;
+}
+
+/* ---------- Card footer ---------- */
+.tv-footer {
+    font-size: .8rem;
+}
+
+/* ---------- Empty state ---------- */
+.tv-empty-title {
+    color: var(--text-dark, #1f2937);
+}
