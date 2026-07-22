@@ -12,7 +12,7 @@
 <section class="d-flex align-items-center justify-content-between flex-wrap gap-3 px-4 py-3 bg-white border-bottom sticky-top">
   <div class="d-flex align-items-center gap-3">
     <div class="d-flex align-items-center justify-content-center rounded-3 fs-4"
-         style="width:48px;height:48px;background:var(--primary-light);">⚙️</div>
+         style="width:48px;height:48px;background:var(--primary-light);"><i class="fa-solid fa-gear"></i></div>
     <div>
       <h1 class="fw-bold mb-0 fs-5"
           style="background:var(--gradient-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
@@ -38,7 +38,7 @@
     <div class="mb-3">
       <input type="text" id="principalSearch"
              class="form-control"
-             placeholder="🔍  Search by name or ID…"
+             placeholder="<i class="fa-solid fa-magnifying-glass"></i>  Search by name or ID…"
              style="max-width:340px;border:2px solid var(--border-color);border-radius:var(--radius-lg);">
     </div>
 
@@ -111,7 +111,7 @@
                             font-size:.82rem;padding:.35rem .9rem;transition:all var(--transition-normal);"
                      onmouseover="this.style.background='var(--primary-color)';this.style.color='#fff';"
                      onmouseout="this.style.background='var(--primary-light)';this.style.color='var(--primary-color)';">
-                    ✏️ Edit
+                    <i class="fa-solid fa-pen"></i> Edit
                   </a>
 
                   <!-- Delete -->
@@ -126,7 +126,7 @@
                                    font-size:.82rem;padding:.35rem .9rem;transition:all var(--transition-normal);"
                             onmouseover="this.style.background='var(--danger-color)';this.style.color='#fff';"
                             onmouseout="this.style.background='var(--danger-light)';this.style.color='var(--danger-color)';">
-                      🗑 Delete
+                      <i class="fa-solid fa-trash"></i> Delete
                     </button>
                   </form>
 
@@ -140,7 +140,7 @@
 
       <!-- No search results -->
       <div id="noResults" class="d-none text-center py-5 text-muted">
-        <p class="fs-4 mb-1">🔍</p>
+        <p class="fs-4 mb-1"><i class="fa-solid fa-magnifying-glass"></i></p>
         <p class="fw-semibold mb-0">No principals match your search</p>
         <p style="font-size:.85rem;">Try a different name or ID</p>
       </div>
@@ -155,7 +155,7 @@
     <!-- Empty state -->
     <div class="card border-0 shadow-sm rounded-4 text-center">
       <div class="card-body py-5">
-        <div class="fs-1 mb-3">🏫</div>
+        <div class="fs-1 mb-3"><i class="fa-solid fa-school"></i></div>
         <h3 class="fw-bold mb-2" style="color:var(--text-dark);">No Principals Found</h3>
         <p class="text-muted mb-4">There are no principals registered in the system yet.</p>
         <a href="{{ url_for('add_principal.add_principal') }}" class="btn btn-primary">+ Add First Principal</a>
@@ -173,7 +173,7 @@
       <div class="modal-header border-0 pb-0">
         <div class="d-flex align-items-center gap-3 w-100">
           <div class="d-flex align-items-center justify-content-center rounded-3 flex-shrink-0"
-               style="width:44px;height:44px;background:var(--danger-light);font-size:1.3rem;">⚠️</div>
+               style="width:44px;height:44px;background:var(--danger-light);font-size:1.3rem;"><i class="fa-solid fa-triangle-exclamation"></i></div>
           <div>
             <h5 class="modal-title fw-bold mb-0" id="deleteModalLabel"
                 style="color:var(--text-dark);">Delete Principal?</h5>

@@ -29,10 +29,11 @@
 </header>
 
 <!-- ── STATS ROW ── -->
+ <!-- All Font Awesome Icons here -->
 <section class="dash-stats" aria-label="Summary statistics">
 
   <div class="stat-card stat-primary anim-slide" style="--delay:.05s">
-    <div class="stat-icon">🏫</div>
+    <div class="stat-icon"><i class="fa-solid fa-school"></i></div>
     <div class="stat-body">
       <span class="stat-label">Total Principals</span>
       <span class="stat-value">{{ total_principal }}</span>
@@ -41,7 +42,7 @@
   </div>
 
   <div class="stat-card stat-teal anim-slide" style="--delay:.12s">
-    <div class="stat-icon">👨‍🏫</div>
+    <div class="stat-icon"><i class="fa-solid fa-chalkboard-user"></i></div>
     <div class="stat-body">
       <span class="stat-label">Total Teachers</span>
       <span class="stat-value">{{total_teacher}}</span>
@@ -50,7 +51,7 @@
   </div>
 
   <div class="stat-card stat-indigo anim-slide" style="--delay:.19s">
-    <div class="stat-icon">🎓</div>
+    <div class="stat-icon"><i class="fa-solid fa-user-graduate"></i></div>
     <div class="stat-body">
       <span class="stat-label">Total Students</span>
       <span class="stat-value">{{total_student}}</span>
@@ -59,7 +60,7 @@
   </div>
 
   <div class="stat-card stat-amber anim-slide" style="--delay:.26s">
-    <div class="stat-icon">📋</div>
+    <div class="stat-icon"><i class="fa-solid fa-square-poll-vertical"></i></div>
     <div class="stat-body">
       <span class="stat-label">Pending Results</span>
       <span class="stat-value">—</span>
@@ -82,7 +83,7 @@
     <nav class="action-list" aria-label="Dashboard navigation">
 
       <a href="{{ url_for('add_principal.add_principal') }}" class="action-item action-blue">
-        <span class="action-icon-wrap">➕</span>
+        <span class="action-icon-wrap"><i class="fa-solid fa-circle-plus"></i></span>
         <div class="action-text">
           <span class="action-name">Add Principal</span>
           <span class="action-desc">Register a new principal to the system</span>
@@ -91,7 +92,7 @@
       </a>
 
       <a href="{{ url_for('admin_dashboard.edit_and_view_principal') }}" class="action-item action-teal">
-        <span class="action-icon-wrap">✏️</span>
+        <span class="action-icon-wrap"><i class="fa-solid fa-pen"></i></span>
         <div class="action-text">
           <span class="action-name">Edit Principal Info</span>
           <span class="action-desc">Modify existing principal details</span>
@@ -100,7 +101,7 @@
       </a>
 
       <a href="{{ url_for('admin_dashboard.view_principals') }}" class="action-item action-indigo">
-        <span class="action-icon-wrap">📋</span>
+        <span class="action-icon-wrap"><i class="fa-solid fa-scroll"></i></span>
         <div class="action-text">
           <span class="action-name">All Principals</span>
           <span class="action-desc">View and manage all principals</span>
@@ -109,7 +110,7 @@
       </a>
 
       <a href="#" class="action-item action-purple">
-        <span class="action-icon-wrap">👨‍🏫</span>
+        <span class="action-icon-wrap"><i class="fa-solid fa-chalkboard-user"></i></span>
         <div class="action-text">
           <span class="action-name">All Teachers</span>
           <span class="action-desc">Browse the complete teacher roster</span>
@@ -118,7 +119,7 @@
       </a>
 
       <a href="#" class="action-item action-amber">
-        <span class="action-icon-wrap">🎓</span>
+        <span class="action-icon-wrap"><i class="fa-solid fa-graduation-cap"></i></span>
         <div class="action-text">
           <span class="action-name">All Students</span>
           <span class="action-desc">Manage the full student directory</span>

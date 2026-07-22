@@ -86,6 +86,8 @@
 }
 
 /* Dark Mode Support (Optional) */
+/* This Dark Mode is unneccesary and creating issues. If user's device has dark mode enabled from system, it's making a UI contrast issue then. */
+/*
 @media (prefers-color-scheme: dark) {
   :root {
     --text-dark: #f0f0f0;
@@ -95,3 +97,4 @@
     --dark-gray: #e0e0e0;
   }
 }
+*/
