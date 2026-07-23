@@ -12,7 +12,7 @@
 <section class="d-flex align-items-center justify-content-between flex-wrap gap-3 px-4 py-3 bg-white border-bottom sticky-top">
   <div class="d-flex align-items-center gap-3">
     <div class="d-flex align-items-center justify-content-center rounded-3 fs-4"
-         style="width:48px;height:48px;background:var(--primary-light);"><i class="fa-solid fa-school"></i></div>
+         style="width:48px;height:48px;background:var(--primary-light);">🏫</div>
     <div>
       <h1 class="fw-bold mb-0 fs-5"
           style="background:var(--gradient-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
@@ -23,7 +23,7 @@
   </div>
   <div class="d-flex gap-2">
     <a href="{{ url_for('admin_dashboard.edit_principal', principal_id=principal.principal_id) }}"
-       class="btn btn-primary btn-sm"><i class="fa-solid fa-pen"></i> Edit</a>
+       class="btn btn-primary btn-sm">✏️ Edit</a>
     <a href="{{ url_for('admin_dashboard.edit_and_view_principal') }}"
        class="btn btn-outline-secondary btn-sm">← Back</a>
   </div>
@@ -94,7 +94,7 @@
         <!-- Phone -->
         <div class="col-sm-6">
           <div class="rounded-3 p-3 h-100" style="background:var(--off-white);border:1px solid var(--border-light);">
-            <p class="mb-1 text-muted" style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;"><i class="fa-solid fa-phone"></i> Phone</p>
+            <p class="mb-1 text-muted" style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">📞 Phone</p>
             <p class="mb-0 fw-semibold" style="font-size:.95rem;color:var(--text-dark);">{{ principal.mobile_number }}</p>
           </div>
         </div>
@@ -102,7 +102,7 @@
         <!-- Email -->
         <div class="col-12">
           <div class="rounded-3 p-3" style="background:var(--off-white);border:1px solid var(--border-light);">
-            <p class="mb-1 text-muted" style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;"><i class="fa-solid fa-envelope"></i> Email</p>
+            <p class="mb-1 text-muted" style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">✉️ Email</p>
             <a href="mailto:{{ principal.email }}"
                class="fw-semibold text-decoration-none"
                style="font-size:.95rem;color:var(--primary-color);">
@@ -124,7 +124,7 @@
         <!-- Institute -->
         <div class="col-12">
           <div class="rounded-3 p-3" style="background:var(--off-white);border:1px solid var(--border-light);">
-            <p class="mb-1 text-muted" style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;"><i class="fa-solid fa-school"></i> Institute</p>
+            <p class="mb-1 text-muted" style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">🏫 Institute</p>
             <p class="mb-0 fw-semibold" style="font-size:.95rem;color:var(--text-dark);">{{ principal.institute }}</p>
           </div>
         </div>
@@ -148,7 +148,7 @@
       <span class="text-muted" style="font-size:.8rem;">Result Management System</span>
       <div class="d-flex gap-2">
         <a href="{{ url_for('admin_dashboard.edit_principal', principal_id=principal.principal_id) }}"
-           class="btn btn-primary btn-sm"><i class="fa-solid fa-pen"></i> Edit Principal</a>
+           class="btn btn-primary btn-sm">✏️ Edit Principal</a>
         <a href="{{ url_for('admin_dashboard.edit_and_view_principal') }}"
            class="btn btn-outline-secondary btn-sm">← Back to List</a>
       </div>
