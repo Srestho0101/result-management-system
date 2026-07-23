@@ -138,7 +138,21 @@ def ask_message():
     try:
         client = get_mistral_client()
 
-        messages = [{"role": "user", "content": user_message}]
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "You are a helpful assistant for school teachers. "
+                    "You help teachers look up student data, attendance, and marks. "
+                    "Always use the available tools to fetch data — never guess or invent student information. "
+                    "Only answer questions relevant to the school system. "
+                    "DO NOT use any extra formatting. Respond in plain text. "
+                    "When a user asks about anything, don't just give the data only factually. Respond with natural language. "
+                    "Have a Gen-Z tone. Respond with energy!"
+                )
+            },
+            {"role": "user", "content": user_message}
+        ]
 
         response = client.chat.complete(
             model=MODEL_NAME,
