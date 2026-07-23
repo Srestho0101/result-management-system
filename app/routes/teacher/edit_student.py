@@ -20,12 +20,9 @@ def edit_student(student_id):
         return redirect(url_for("login.login"))
 
     student_data = AddStudentInfo.query.get_or_404(student_id)
-
     teacher_id = session.get("teacher_id")
     principal_id = session.get("temp_principal_id")
-    
     form = AddStudentForm(obj=student_data)
-
     assignments = TeacherAssignment.query.filter_by(
         teacher_id=teacher_id
     ).all()
@@ -37,7 +34,6 @@ def edit_student(student_id):
         Department.principal_id == principal_id,
         Department.department_id.in_(department_ids)
     ).all()
-
     form.department_id.choices = [
         (
             d.department_id,
@@ -53,9 +49,7 @@ def edit_student(student_id):
             student_data.department_id = form.department_id.data
             student_data.semester = form.semester.data
             student_data.group = form.group.data
-
             db.session.commit()
-
             flash("Student Data Edited Successfully", "success")
             return redirect(url_for("show_student.show_student"))
     except Exception:
@@ -80,7 +74,6 @@ def delete_student(student_id):
         db.session.delete(student)
         db.session.commit()
         flash("Student Deleted Successfully", "success")
-
     except Exception as e:
         db.session.rollback()
         flash(f"Error Deleting Student: {e}", "danger")
