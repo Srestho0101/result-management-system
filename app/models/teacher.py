@@ -8,6 +8,7 @@ class AddStudentInfo(db.Model):
     student_full_name = db.Column(db.String(250), nullable=False)
     semester = db.Column(db.Integer, nullable=False)
     group = db.Column(db.String(1))
+    cgpa = db.Column(db.Float, default=0)
     department_id = db.Column(db.Integer,db.ForeignKey("departments.department_id"),nullable=False)
     principal_id = db.Column(db.Integer,db.ForeignKey("principal_info.principal_id"))
     teacher_id = db.Column(db.Integer,db.ForeignKey("teacher_info.teacher_id"))
