@@ -76,6 +76,7 @@ class Subjects(db.Model):
         db.Integer,
         db.ForeignKey("teacher_info.teacher_id")
     )
+    
     __table_args__ = (
         db.UniqueConstraint(
             "principal_id",
