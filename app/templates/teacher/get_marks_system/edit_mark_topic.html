@@ -1,7 +1,7 @@
 {% extends "base/base.html" %}
 
 {% block title %}
-Marks Topic Name
+Edit Marks Topic
 {% endblock %}
 
 {% block content %}
@@ -20,14 +20,36 @@ Marks Topic Name
 
                 {{ form.hidden_tag() }}
 
+                <!-- Department -->
+                <div class="mb-3">
+                    {{ form.department_id.label(class="form-label") }}
+                    {{ form.department_id(class="form-select", id="department") }}
+                </div>
+
+                <!-- Subject -->
+                <div class="mb-3">
+                    {{ form.subject.label(class="form-label") }}
+                    {{ form.subject(class="form-select", id="subject") }}
+                </div>
+
+                <!-- Topic Name -->
                 <div class="mb-3">
                     {{ form.add_marks_topic_name.label(class="form-label") }}
                     {{ form.add_marks_topic_name(class="form-control") }}
                 </div>
 
+                <!-- Full Marks -->
                 <div class="mb-3">
-                    {{ form.submit(class="btn btn-primary") }}
+                    {{ form.full_marks.label(class="form-label") }}
+                    {{ form.full_marks(class="form-control") }}
                 </div>
+
+                {{ form.submit(class="btn btn-success") }}
+
+                <a href="{{ url_for('get_marks.show_marks_system') }}"
+                   class="btn btn-secondary">
+                    Cancel
+                </a>
 
             </form>
 
@@ -36,5 +58,57 @@ Marks Topic Name
     </div>
 
 </div>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const department = document.getElementById("department");
+    const subject = document.getElementById("subject");
+
+    department.addEventListener("change", function () {
+
+        const departmentId = this.value;
+
+        subject.innerHTML =
+            '<option value="">Loading...</option>';
+
+        fetch(`/get_subject/api/subjects/${departmentId}`)
+
+            .then(response => response.json())
+
+            .then(data => {
+
+                subject.innerHTML =
+                    '<option value="">Select Subject</option>';
+
+                data.forEach(item => {
+
+                    let option = document.createElement("option");
+
+                    option.value = item.id;
+
+                    option.textContent = item.name;
+
+                    subject.appendChild(option);
+
+                });
+
+            })
+
+            .catch(error => {
+
+                console.log(error);
+
+                subject.innerHTML =
+                    '<option value="">Failed To Load</option>';
+
+            });
+
+    });
+
+});
+
+</script>
 
 {% endblock %}

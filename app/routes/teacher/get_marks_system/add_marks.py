@@ -19,7 +19,6 @@ def add_marks(student_id):
 
     teacher_id = session.get("teacher_id")
     student = AddStudentInfo.query.get_or_404(student_id)
-
     form = AddMarksForm()
 
     # ==========================
@@ -37,7 +36,6 @@ def add_marks(student_id):
         .distinct()
         .all()
     )
-
     form.subject.choices = [
         (
             s.subject_id,
@@ -46,14 +44,11 @@ def add_marks(student_id):
         for s in subjects
     ]
 
-
     if form.subject.data:
-
         topics = MarksTopic.query.filter_by(
             teacher_id=teacher_id,
             subject_id=form.subject.data
         ).all()
-
         form.marks_topic.choices = [
             (
                 t.marks_topic_id,
@@ -61,7 +56,6 @@ def add_marks(student_id):
             )
             for t in topics
         ]
-
     else:
         form.marks_topic.choices = []
 
