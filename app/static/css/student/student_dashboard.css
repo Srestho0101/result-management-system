@@ -1,0 +1,310 @@
+/* ==========================================================
+   Student Dashboard
+   Picks up --primary-color / --gradient-primary / --border-light
+   from colors.css / styles.css if loaded; falls back otherwise.
+   ========================================================== */
+
+/* ---------- Page header bar ---------- */
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    background: var(--white, #fff);
+    padding: 18px 32px;
+    border-bottom: 1px solid var(--border-color, #e0e0e0);
+}
+
+.page-header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.page-header-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--gradient-primary, linear-gradient(135deg, #0066cc, #00d4ff));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 700;
+    font-size: 17px;
+}
+
+.page-header-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--primary-light, #e6f0ff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color, #0066cc);
+}
+
+.page-header-icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+.page-header-greeting {
+    margin: 0;
+    font-size: 13px;
+    color: var(--medium-gray, #6c757d);
+}
+
+.page-header-title {
+    margin: 2px 0 0;
+    font-size: 19px;
+    font-weight: 700;
+    background: var(--gradient-primary, linear-gradient(135deg, #0066cc, #00d4ff));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.page-header-sub {
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: var(--medium-gray, #6c757d);
+}
+
+.page-header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.role-badge {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--primary-color, #0066cc);
+    background: var(--primary-light, #e6f0ff);
+    padding: 6px 16px;
+    border-radius: var(--radius-full, 9999px);
+}
+
+.btn-outline-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary-color, #0066cc);
+    background: #fff;
+    border: 1.5px solid var(--primary-color, #0066cc);
+    border-radius: var(--radius-full, 9999px);
+    padding: 7px 18px;
+    text-decoration: none;
+    transition: background var(--transition-fast, 0.15s ease), color var(--transition-fast, 0.15s ease);
+}
+
+.btn-outline-pill:hover {
+    background: var(--primary-color, #0066cc);
+    color: #fff;
+}
+
+.dash-wrap {
+    --db-gradient: var(--gradient-primary, linear-gradient(135deg, #0d47f4 0%, #12b7e8 100%));
+    --db-primary: var(--primary-color, #0d47f4);
+    --db-border: var(--border-light, #e7ebf3);
+    --db-text: #1a1f36;
+    --db-muted: #6b7280;
+    --db-surface: #ffffff;
+    --db-bg-soft: #f5f7fb;
+    --db-shadow: 0 4px 20px rgba(13, 71, 244, 0.08);
+
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: var(--db-text);
+}
+
+/* ---------- Welcome banner ---------- */
+.welcome-banner {
+    background: var(--db-gradient);
+    border-radius: 18px;
+    padding: 32px 36px 28px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--db-shadow);
+}
+
+.welcome-banner::before {
+    content: "";
+    position: absolute;
+    top: -40px;
+    right: -30px;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.welcome-banner::after {
+    content: "";
+    position: absolute;
+    bottom: -50px;
+    right: 50px;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.welcome-top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+    z-index: 1;
+}
+
+.avatar {
+    flex-shrink: 0;
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.welcome-label {
+    margin: 0;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.welcome-name {
+    margin: 3px 0 0;
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.stat-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+    position: relative;
+    z-index: 1;
+}
+
+.chip {
+    background: rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
+    padding: 10px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.chip-label {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.chip-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+}
+
+/* ---------- Section label ---------- */
+.section-label {
+    margin: 36px 0 14px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--db-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* ---------- Quick access cards ---------- */
+.link-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 18px;
+}
+
+.link-card {
+    display: block;
+    background: var(--db-surface);
+    border: 1px solid var(--db-border);
+    border-radius: 16px;
+    padding: 26px;
+    text-decoration: none;
+    color: var(--db-text);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.link-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--db-shadow);
+    border-color: transparent;
+}
+
+.link-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    background: var(--db-bg-soft);
+    color: var(--db-primary);
+}
+
+.link-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.link-marks .link-icon {
+    background: rgba(13, 71, 244, 0.1);
+    color: #0d47f4;
+}
+
+.link-attendance .link-icon {
+    background: rgba(29, 158, 117, 0.12);
+    color: #1d9e75;
+}
+
+.link-cgpa .link-icon {
+    background: rgba(127, 119, 221, 0.14);
+    color: #534ab7;
+}
+
+.link-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.link-sub {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: var(--db-muted);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 480px) {
+    .stat-chips {
+        gap: 8px;
+    }
+    .chip {
+        padding: 7px 11px;
+    }
+}
