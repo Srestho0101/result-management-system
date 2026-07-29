@@ -1,0 +1,146 @@
+/* cgpa.css */
+
+.cgpa-wrapper {
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+.cgpa-card {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 20px 50px rgba(13, 71, 244, 0.10), 0 2px 8px rgba(13, 71, 244, 0.06);
+    position: relative;
+    overflow: hidden;
+}
+
+.cgpa-card::before {
+    content: "";
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0d47f4, #12b7e8);
+    opacity: 0.08;
+}
+
+.cgpa-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.cgpa-header .eyebrow {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #12b7e8;
+    background: #eaf7fd;
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    margin-bottom: 0.6rem;
+}
+
+.cgpa-header h3 {
+    font-weight: 800;
+    font-size: 1.6rem;
+    background: linear-gradient(135deg, #0d47f4, #12b7e8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+}
+
+/* Circular gauge */
+.cgpa-gauge {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto 2rem;
+    position: relative;
+    border-radius: 50%;
+    background: conic-gradient(#0d47f4 calc(var(--cgpa-pct, 0) * 1%), #eef1fd 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cgpa-gauge::before {
+    content: "";
+    position: absolute;
+    width: 148px;
+    height: 148px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: inset 0 2px 6px rgba(13, 71, 244, 0.08);
+}
+
+.cgpa-gauge-inner {
+    position: relative;
+    text-align: center;
+    z-index: 1;
+}
+
+.cgpa-gauge-inner .value {
+    display: block;
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: #0d1a4b;
+    line-height: 1;
+}
+
+.cgpa-gauge-inner .scale {
+    display: block;
+    font-size: 0.8rem;
+    color: #8a93b8;
+    margin-top: 0.25rem;
+}
+
+.cgpa-gauge.pending {
+    background: #f5f6fb;
+}
+
+.cgpa-gauge.pending::before {
+    box-shadow: none;
+}
+
+.cgpa-gauge-inner .pending-text {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #b98900;
+}
+
+/* Stat grid */
+.cgpa-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.cgpa-stat {
+    background: #f7f9ff;
+    border: 1px solid #eef1fd;
+    border-radius: 14px;
+    padding: 0.9rem 1rem;
+}
+
+.cgpa-stat.full {
+    grid-column: 1 / -1;
+}
+
+.cgpa-stat .label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #8a93b8;
+    margin-bottom: 0.2rem;
+}
+
+.cgpa-stat .value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1a2140;
+}

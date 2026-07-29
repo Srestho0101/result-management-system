@@ -4,82 +4,56 @@
 View CGPA
 {% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/student/cgpa.css') }}">
+{% endblock %}
+
 {% block content %}
-
 <div class="container py-5">
+    <div class="cgpa-wrapper">
+        <div class="cgpa-card">
 
-    <div class="row justify-content-center">
+            <div class="cgpa-header">
+                <span class="eyebrow">Academic Record</span>
+                <h3>Student CGPA</h3>
+            </div>
 
-        <div class="col-lg-6">
-
-            <div class="card shadow-lg border-0">
-
-                <div class="card-header bg-primary text-white text-center">
-
-                    <h3 class="mb-0">
-                        Student CGPA
-                    </h3>
-
+            {% if student_cgpa.cgpa and student_cgpa.cgpa > 0 %}
+                {% set pct = (student_cgpa.cgpa / 4.0 * 100) | round(1) %}
+                <div class="cgpa-gauge" style="--cgpa-pct: {{ pct }};">
+                    <div class="cgpa-gauge-inner">
+                        <span class="value">{{ "%.2f"|format(student_cgpa.cgpa) }}</span>
+                        <span class="scale">out of 4.00</span>
+                    </div>
                 </div>
-
-                <div class="card-body">
-
-                    <table class="table table-bordered">
-
-                        <tr>
-                            <th width="40%">Student Roll</th>
-                            <td>{{ student_cgpa.student_roll }}</td>
-                        </tr>
-
-                        <tr>
-                            <th>Student Name</th>
-                            <td>{{ student_cgpa.student_full_name }}</td>
-                        </tr>
-
-                        <tr>
-                            <th>Semester</th>
-                            <td>{{ student_cgpa.semester }}</td>
-                        </tr>
-
-                        <tr>
-                            <th>Group</th>
-                            <td>{{ student_cgpa.group }}</td>
-                        </tr>
-
-                        <tr class="table-success">
-
-                            <th>CGPA</th>
-
-                            <td>
-
-                                {% if student_cgpa.cgpa and student_cgpa.cgpa > 0 %}
-
-                                    <span class="badge bg-success fs-5">
-                                        {{ "%.2f"|format(student_cgpa.cgpa) }}
-                                    </span>
-
-                                {% else %}
-
-                                    <span class="badge bg-warning text-dark fs-6">
-                                        CGPA Not Published Yet
-                                    </span>
-
-                                {% endif %}
-
-                            </td>
-
-                        </tr>
-
-                    </table>
-
+            {% else %}
+                <div class="cgpa-gauge pending">
+                    <div class="cgpa-gauge-inner">
+                        <span class="pending-text">Not<br>Published</span>
+                    </div>
                 </div>
+            {% endif %}
 
+            <div class="cgpa-stats">
+                <div class="cgpa-stat">
+                    <div class="label">Roll</div>
+                    <div class="value">{{ student_cgpa.student_roll }}</div>
+                </div>
+                <div class="cgpa-stat">
+                    <div class="label">Semester</div>
+                    <div class="value">{{ student_cgpa.semester }}</div>
+                </div>
+                <div class="cgpa-stat full">
+                    <div class="label">Name</div>
+                    <div class="value">{{ student_cgpa.student_full_name }}</div>
+                </div>
+                <div class="cgpa-stat full">
+                    <div class="label">Group</div>
+                    <div class="value">{{ student_cgpa.group }}</div>
+                </div>
             </div>
 
         </div>
-
     </div>
-
 </div>
-
 {% endblock %}
