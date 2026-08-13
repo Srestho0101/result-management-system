@@ -38,6 +38,7 @@ def create_app():
     from .routes.student.attendance import student_attendance_bp
     from .routes.admin.upload_cgpa import upload_cgpa_bp
     from .routes.student.view_cgpa import view_student_cgpa_bp
+    from .routes.ai.routes import ai_bp
 
     app.register_blueprint(home_bp) 
     app.register_blueprint(login_bp) 
@@ -69,5 +70,6 @@ def create_app():
     app.register_blueprint(student_attendance_bp)
     app.register_blueprint(upload_cgpa_bp)
     app.register_blueprint(view_student_cgpa_bp)
+    app.register_blueprint(ai_bp)
 
     return app
