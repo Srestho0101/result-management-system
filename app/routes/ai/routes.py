@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, request, jsonify, session
 
 from mistralai.client import Mistral
 
-from app.ai.tools import get_student_data
+from app.ai.tools import get_student_data, get_student_by_roll
 
 ai_bp = Blueprint("ai", __name__, url_prefix="")
 
@@ -34,18 +34,39 @@ TOOLS_SCHEMA = [
     {
         "type": "function",
         "function": {
+            "name": "get_student_by_roll",
+            "description": (
+                "Fetch a single student's profile (name, semester, group, CGPA, "
+                "department) by roll number. This is the human-facing student ID. "
+                "Only returns students belonging to the current teacher."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "student_roll": {
+                        "type": "integer",
+                        "description": "The student's roll number (unique, user-facing ID).",
+                    },
+                },
+                "required": ["student_roll"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
             "name": "get_student_data",
             "description": (
-                "Fetch a single student's profile (roll, name, semester, "
-                "group, CGPA, department) by student_id. Only returns "
-                "students belonging to the current teacher."
+                "Fetch a single student's profile by internal student ID. "
+                "Prefer get_student_by_roll for user-facing lookups. "
+                "Only returns students belonging to the current teacher."
             ),
             "parameters": {
                 "type": "object",
                 "properties": {
                     "student_id": {
                         "type": "integer",
-                        "description": "The student's student_id.",
+                        "description": "The student's internal student_id (auto-increment).",
                     },
                 },
                 "required": ["student_id"],
@@ -62,6 +83,13 @@ def dispatch_tool_call(tool_name, arguments):
     the model ever needing to know or supply that id itself.
     """
     teacher_id = session.get("teacher_id")
+
+    if tool_name == "get_student_by_roll":
+        result = get_student_by_roll(
+            student_roll=arguments.get("student_roll"),
+            teacher_id=teacher_id,
+        )
+        return result if result is not None else {"error": "student not found"}
 
     if tool_name == "get_student_data":
         result = get_student_data(

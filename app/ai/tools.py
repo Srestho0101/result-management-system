@@ -20,17 +20,15 @@ from app.models.assign import Department, Subjects
 
 def get_student_data(student_id, teacher_id):
     """
-    Fetch a single student's profile, scoped to the requesting teacher.
+    Fetch a single student's profile by internal student_id,
+    scoped to the requesting teacher.
 
     Args:
-        student_id (int): AddStudentInfo.student_id to look up.
+        student_id (int): AddStudentInfo.student_id (auto-increment PK).
         teacher_id (int): The teacher making the request (from session).
-                           Used to enforce that a teacher can only fetch
-                           their own students.
 
     Returns:
-        dict | None: Student data, or None if no matching student is
-                      found for this teacher.
+        dict | None: Student data, or None if not found for this teacher.
     """
     student = AddStudentInfo.query.filter_by(
         student_id=student_id,
@@ -40,8 +38,45 @@ def get_student_data(student_id, teacher_id):
     if student is None:
         return None
 
-    # department_id is a bare FK (no relationship declared on AddStudentInfo),
-    # so we look it up explicitly rather than dot-accessing student.department
+    department = Department.query.filter_by(
+        department_id=student.department_id
+    ).first()
+
+    return {
+        "student_id": student.student_id,
+        "student_roll": student.student_roll,
+        "student_full_name": student.student_full_name,
+        "semester": student.semester,
+        "group": student.group,
+        "cgpa": student.cgpa,
+        "department_id": student.department_id,
+        "department_name": department.department_name if department else None,
+        "department_code": department.department_code if department else None,
+        "teacher_id": student.teacher_id,
+        "principal_id": student.principal_id,
+    }
+
+
+def get_student_by_roll(student_roll, teacher_id):
+    """
+    Fetch a single student's profile by roll number (the human-facing ID),
+    scoped to the requesting teacher.
+
+    Args:
+        student_roll (int): AddStudentInfo.student_roll (unique, user-facing).
+        teacher_id (int): The teacher making the request (from session).
+
+    Returns:
+        dict | None: Student data, or None if not found for this teacher.
+    """
+    student = AddStudentInfo.query.filter_by(
+        student_roll=student_roll,
+        teacher_id=teacher_id
+    ).first()
+
+    if student is None:
+        return None
+
     department = Department.query.filter_by(
         department_id=student.department_id
     ).first()
