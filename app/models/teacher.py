@@ -32,75 +32,26 @@ class Attendance(db.Model):
 
 class MarksTopic(db.Model):
     __tablename__ = "marks_topic"
-    marks_topic_id = db.Column(
-        db.Integer,
-        primary_key=True
-    )
-
-    marks_topic_name = db.Column(
-        db.String(100),
-        nullable=False
-    )
-
-    full_marks = db.Column(
-        db.Integer,
-        nullable=False,
-    )
-    subject_id = db.Column(
-        db.Integer,
-        db.ForeignKey("subjects.subject_id"),
-        nullable=False
-    )
+    marks_topic_id = db.Column(db.Integer,primary_key=True)
+    marks_topic_name = db.Column(db.String(100),nullable=False)
+    full_marks = db.Column(db.Integer,nullable=False,)
+    subject_id = db.Column(db.Integerdb.ForeignKey("subjects.subject_id"),nullable=False)
     teacher_id = db.Column(
         db.Integer,
         db.ForeignKey("teacher_info.teacher_id"),
         nullable=False
     )
-
 
 class AddMarks(db.Model):
     __tablename__ = "add_marks"
 
-    marks_id = db.Column(
-        db.Integer,
-        primary_key=True,
-        autoincrement=True
-    )
-
-    student_id = db.Column(
-        db.Integer,
-        db.ForeignKey("student_data.student_id"),
-        nullable=False
-    )
-
-    subject_id = db.Column(
-        db.Integer,
-        db.ForeignKey("subjects.subject_id"),
-        nullable=False
-    )
-
-    teacher_id = db.Column(
-        db.Integer,
-        db.ForeignKey("teacher_info.teacher_id"),
-        nullable=False
-    )
-
-    marks_topic_id = db.Column(
-        db.Integer,
-        db.ForeignKey("marks_topic.marks_topic_id"),
-        nullable=False
-    )
-
-    obtained_marks = db.Column(
-        db.Float,
-        nullable=False
-    )
-
-    created_at = db.Column(
-        db.DateTime,
-        server_default=db.func.now()
-    )
-
+    marks_id = db.Column(db.Integer,primary_key=True,autoincrement=True)
+    student_id = db.Column(db.Integer,db.ForeignKey("student_data.student_id"),nullable=False)
+    subject_id = db.Column(db.Integer,db.ForeignKey("subjects.subject_id"),nullable=False)
+    teacher_id = db.Column(db.Integer,db.ForeignKey("teacher_info.teacher_id"),nullable=False)
+    marks_topic_id = db.Column(db.Integer,db.ForeignKey("marks_topic.marks_topic_id"),nullable=False)
+    obtained_marks = db.Column(db.Float,nullable=False)
+    created_at = db.Column(db.DateTime,server_default=db.func.now())
     student = db.relationship("AddStudentInfo", backref="marks")
     subject = db.relationship("Subjects", backref="marks")
     topic = db.relationship("MarksTopic", backref="marks")
