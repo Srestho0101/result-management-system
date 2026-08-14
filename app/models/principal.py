@@ -10,7 +10,8 @@ class TeacherAddInfo(db.Model):
     phone = db.Column(db.String(11), nullable=False, unique=True)
     email = db.Column(db.String(50), nullable=False, unique=True)
     username = db.Column(db.String(100), nullable=False, unique=True)
-    password = db.Column(db.String(120), nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
+    
     principal_id = db.Column(
         db.Integer,
         db.ForeignKey("principal_info.principal_id"),

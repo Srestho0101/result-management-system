@@ -14,13 +14,9 @@ student_attendance_bp = Blueprint(
 
 @student_attendance_bp.route("/")
 def attendance():
-
     student_roll_check()
-
     student_id = session.get("student_id")
-
     page = request.args.get("page", 1, type=int)
-
     attendance = (
         Attendance.query
         .filter_by(student_id=student_id)
@@ -53,7 +49,6 @@ def attendance():
     ) or 0
 
     percentage = 0
-
     if total_class > 0:
         percentage = round((total_present / total_class) * 100, 2)
 
