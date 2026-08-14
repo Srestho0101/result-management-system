@@ -1,26 +1,15 @@
 {% extends "base/base.html" %}
-
 {% block content %}
-
 <div class="card">
-
     <h2>Select Shift</h2>
-
     <form method="POST">
-
         {{ form.hidden_tag() }}
-
         <div>
             {{ form.shift.label }}
             {{ form.shift(class="form-control") }}
         </div>
-
         <br>
-
         {{ form.submit(class="btn btn-primary") }}
-
     </form>
-
 </div>
-
 {% endblock %}

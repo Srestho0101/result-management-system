@@ -1,6 +1,5 @@
 import re
 import pdfplumber
-
 from flask import render_template, flash, redirect, url_for,Blueprint,session
 from app.extensions import db
 from app.models.teacher import AddStudentInfo
@@ -16,7 +15,7 @@ upload_cgpa_bp = Blueprint(
 def upload_cgpa():
     if not session.get("admin"):
         return redirect(url_for("login.login"))
-
+    
     form = UploadCGPAForm()
     if form.validate_on_submit():
         pdf = form.pdf.data
@@ -45,7 +44,6 @@ def upload_cgpa():
 
         db.session.commit()
         flash(f"Updated : {updated} | Not Found : {not_found}","success")
-
         return redirect(url_for("admin_dashboard.admin_dashboard"))
 
     return render_template(

@@ -46,13 +46,9 @@ def subjects_marks():
 
 @subjects_marks_bp.route("/details/<int:subject_id>")
 def subject_details(subject_id):
-
     student_roll_check()
-
     student_id = session.get("student_id")
-
     subject = Subjects.query.get_or_404(subject_id)
-
     marks = (
         AddMarks.query
         .filter_by(

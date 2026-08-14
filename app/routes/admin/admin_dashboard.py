@@ -1,9 +1,10 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, session
+from flask import Blueprint, render_template, redirect, url_for, flash,session
 from app.utils.form import PrincipalDataForm
 from app.models.admin import PrincipalDataInfo
 from app.models.teacher import AddStudentInfo
 from app.models.principal import TeacherAddInfo
 from app.extensions import db
+from werkzeug.security import generate_password_hash
 
 admin_bp = Blueprint("admin_dashboard",__name__,url_prefix="/admin_dashboard")
 @admin_bp.route("/admin_dashboard",methods=["GET","POST"])
@@ -27,12 +28,11 @@ def admin_dashboard():
     
 @admin_bp.route("/views_principals")
 def view_principals():
-    
     if not session.get("admin"):
         return redirect(url_for("login.login"))
 
     principals = PrincipalDataInfo.query.all()
-
+    
     return render_template(
         "admin/view_principals.html",
         principals = principals
@@ -79,11 +79,11 @@ def edit_principal(principal_id):
         principal.institute = form.institute.data
         principal.institute_code = form.institute_code.data
         principal.username = form.username.data
-        principal.password = form.password.data
+        principal.password_hash = generate_password_hash(form.password.data)
 
         db.session.commit()
 
-        flash("Principal information update successfully","sucess")
+        flash("Principal information update successfully","success")
 
         return redirect(url_for("admin_dashboard.admin_dashboard"))
     

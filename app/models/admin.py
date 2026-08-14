@@ -1,11 +1,11 @@
 from app.extensions import db
+from app.extensions import db
+
 class Admin(db.Model):
-    __tablename__ = "admin"
-
-    id = db.Column(db.Integer, primary_key = True)
-    username = db.Column(db.String(50),nullable=False,unique=True)
-    password = db.Column(db.String(120), nullable=False)
-
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100), unique=True, nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
+    
 class PrincipalDataInfo(db.Model):
     __tablename__ = "principal_info"
 
@@ -17,5 +17,5 @@ class PrincipalDataInfo(db.Model):
     institute = db.Column(db.String(200),nullable=False,unique=True)
     institute_code = db.Column(db.String(30),nullable=False,unique=True)
     username = db.Column(db.String(120),nullable=False,unique=True)
-    password = db.Column(db.String(120), nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
     
