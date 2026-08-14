@@ -8,12 +8,21 @@ from werkzeug.security import generate_password_hash,check_password_hash
 
 login_bp = Blueprint("login", __name__, url_prefix="/login")
 
-DEFAULT_USERNAME = "admin"
-DEFAULT_PASSWORD = "admin123"
-
 @login_bp.route("/", methods=["GET", "POST"])
 def login():
     form = LoginForm()
+
+    # This code run first time for create admin.If admin created. Then remove or comment this code
+    '''
+    admin = Admin(
+        username="admin",
+        password_hash=generate_password_hash("admin123")
+    )
+
+    db.session.add(admin)
+    db.session.commit()
+    '''
+    
     try:
         if form.validate_on_submit():
             username = form.username.data
