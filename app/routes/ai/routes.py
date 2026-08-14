@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 import json
 from flask import Blueprint, render_template, request, jsonify, session
 
@@ -8,11 +9,13 @@ from app.ai.tools import get_student_data, get_student_by_roll
 
 ai_bp = Blueprint("ai", __name__, url_prefix="")
 
+load_dotenv() # Loading all the vars from the .env file. Make life ezzy.
+
 MODEL_NAME = "mistral-small-latest"
 
 
 def get_mistral_client():
-    api_key = os.environ.get("MISTRAL_API_KEY")
+    api_key = os.getenv("MISTRAL_API_KEY")
     if not api_key:
         raise RuntimeError("MISTRAL_API_KEY is not set")
     return Mistral(api_key=api_key)
