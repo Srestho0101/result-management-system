@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import IntegerField,StringField,PasswordField,SubmitField
 from wtforms.validators import DataRequired,Length,Regexp,EqualTo
 
-class AddTecaherForm(FlaskForm):
+class AddTeacherForm(FlaskForm):
     teacher_id = IntegerField(
         "Teacher ID",
         validators=[

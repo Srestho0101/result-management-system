@@ -1,21 +1,20 @@
 from flask import Blueprint, redirect, url_for, session, render_template,flash
 from app.models.principal import TeacherAddInfo
-from app.utils.principalForm import AddTecaherForm
+from app.utils.principalForm import AddTeacherForm
 from app.extensions import db
 
-edit_tecaher_bp = Blueprint(
+edit_teacher_bp = Blueprint(
     "edit_teacher",
     __name__,
     url_prefix="/edit_teacher"
 )
 
-@edit_tecaher_bp.route("/")
-def edit_tecaher_view():
+@edit_teacher_bp.route("/")
+def edit_teacher_view():
     if not session.get("principal"):
         return redirect(url_for("login.login"))
 
     principal_id = session.get("principal_id")
-
     teachers_data = TeacherAddInfo.query.filter_by(
         principal_id=principal_id
     ).all()
@@ -26,14 +25,14 @@ def edit_tecaher_view():
     )
 
 
-@edit_tecaher_bp.route("/principal/<int:teacher_id>/edit",methods=["GET","POST"])
+@edit_teacher_bp.route("/principal/<int:teacher_id>/edit",methods=["GET","POST"])
 def edit_teacher(teacher_id):
        
     if not session.get("principal"):
         return redirect(url_for("login.login"))
         
     teacher =TeacherAddInfo.query.get_or_404(teacher_id)
-    form = AddTecaherForm(obj=teacher)
+    form = AddTeacherForm(obj=teacher)
 
     try:
         if form.validate_on_submit():
@@ -46,14 +45,14 @@ def edit_teacher(teacher_id):
             teacher.phone = form.phone.data
             teacher.email = form.email.data
             teacher.username = form.username.data
-            teacher.password = form.password.data
+            teacher.password_hash = form.password.data
 
             db.session.commit()
             flash("Teacher data edited!","success")
             return redirect(url_for("principal_dashboard.principal_dashboard"))
     except Exception as e:
         db.session.rollback()
-        flash("Somthing wrong","danger")
+        flash("wrong","danger")
 
     return render_template(
         "principal/edit_teacher.html",
@@ -62,7 +61,7 @@ def edit_teacher(teacher_id):
     )
 
 
-@edit_tecaher_bp.route("/principal/<int:teacher_id>/delete", methods=["POST"])
+@edit_teacher_bp.route("/principal/<int:teacher_id>/delete", methods=["POST"])
 def delete_teacher(teacher_id):
     teacher = TeacherAddInfo.query.get_or_404(teacher_id)
 

@@ -1,55 +1,52 @@
-from flask import Blueprint, redirect, render_template, request, url_for, flash, session
+from flask import Blueprint, redirect, render_template, url_for, flash, session
 from app.utils.form import LoginForm
-from app.models.admin import PrincipalDataInfo
+from app.models.admin import PrincipalDataInfo,Admin
 from app.models.principal import TeacherAddInfo
-from app.models.teacher import AddStudentInfo
 from app.utils.form import ShiftSelectForm
-from app.models.teacher import AddStudentInfo
 from app.extensions import db
-
+from werkzeug.security import generate_password_hash,check_password_hash
 
 login_bp = Blueprint("login", __name__, url_prefix="/login")
-
-DEFAULT_USERNAME = "admin"
-DEFAULT_PASSWORD = "admin123"
 
 @login_bp.route("/", methods=["GET", "POST"])
 def login():
     form = LoginForm()
+
+    # This code run first time for create admin.If admin created. Then remove or comment this code
+    '''
+    admin = Admin(
+        username="admin",
+        password_hash=generate_password_hash("admin123")
+    )
+
+    db.session.add(admin)
+    db.session.commit()
+    '''
     
     try:
         if form.validate_on_submit():
             username = form.username.data
             password = form.password.data
-            if (username == DEFAULT_USERNAME and password == DEFAULT_PASSWORD):
+
+            admin = Admin.query.filter_by(username=username).first()
+            if admin and check_password_hash(admin.password_hash, password):
                 session.clear()
                 session["admin"] = True
 
                 flash("Admin Login Successful","success")
                 return redirect(url_for("admin_dashboard.admin_dashboard"))
     
-
             # Principal Login
-            principal = PrincipalDataInfo.query.filter_by(username=username,password=password).first()
-
-            if principal:
+            principal = PrincipalDataInfo.query.filter_by(username=username).first()
+            if principal and check_password_hash(principal.password_hash,password):
                 session.clear()
                 session["principal"] = True
                 session["temp_principal_id"] = principal.principal_id
-
                 return redirect(url_for("login.select_shift"))
 
-            
-
         # teacher login
-            teacher = TeacherAddInfo.query.filter_by(username=username,password=password).first()
-            student = AddStudentInfo.query.filter_by(teacher_id=teacher.teacher_id)
-            teacher = TeacherAddInfo.query.filter_by(
-                username=username,
-                password=password
-            ).first()
-
-            if teacher:
+            teacher = TeacherAddInfo.query.filter_by(username=username).first()
+            if teacher and check_password_hash(teacher.password_hash, password):
                 session.clear()
                 session["teacher"] = True
                 session["teacher_id"] = teacher.teacher_id
@@ -64,9 +61,7 @@ def login():
         db.session.rollback()   
         flash("Invalid username and password","danger")
 
-
     return render_template("auth/login.html",login_form=form)
-
 
 @login_bp.route("/logout")
 def logout():

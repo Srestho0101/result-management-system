@@ -14,7 +14,6 @@ def view_teachers():
         return redirect(url_for('login.login'))
 
     principal_id = session.get("principal_id")
-
     teachers_data = TeacherAddInfo.query.filter_by(
         principal_id=principal_id,
          shift=session["shift"]

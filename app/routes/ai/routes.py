@@ -2,17 +2,15 @@ import os
 from dotenv import load_dotenv
 import json
 from flask import Blueprint, render_template, request, jsonify, session
-
 from mistralai.client import Mistral
-
 from app.ai.tools import get_student_data, get_student_by_roll
+
 
 ai_bp = Blueprint("ai", __name__, url_prefix="")
 
 load_dotenv() # Loading all the vars from the .env file. Make life ezzy.
 
 MODEL_NAME = "mistral-small-latest"
-
 
 def get_mistral_client():
     api_key = os.getenv("MISTRAL_API_KEY")
@@ -86,7 +84,6 @@ def dispatch_tool_call(tool_name, arguments):
     the model ever needing to know or supply that id itself.
     """
     teacher_id = session.get("teacher_id")
-
     if tool_name == "get_student_by_roll":
         result = get_student_by_roll(
             student_roll=arguments.get("student_roll"),
@@ -100,9 +97,7 @@ def dispatch_tool_call(tool_name, arguments):
             teacher_id=teacher_id,
         )
         return result if result is not None else {"error": "student not found"}
-
     return {"error": f"unknown tool: {tool_name}"}
-
 
 @ai_bp.route("/ask", methods=["GET"])
 def ask_page():
@@ -134,7 +129,6 @@ def ask_message():
 
     if not user_message:
         return jsonify({"error": "message is required"}), 400
-
     try:
         client = get_mistral_client()
 
@@ -160,10 +154,8 @@ def ask_message():
             tools=TOOLS_SCHEMA,
             tool_choice="auto",
         )
-
         choice_message = response.choices[0].message
         tool_calls = getattr(choice_message, "tool_calls", None)
-
         if tool_calls:
             # Echo the assistant's tool-call message back into the
             # conversation, then append one "tool" message per call
@@ -194,8 +186,6 @@ def ask_message():
             reply_text = follow_up.choices[0].message.content
         else:
             reply_text = choice_message.content
-
     except Exception as exc:
         return jsonify({"error": str(exc)}), 500
-
     return jsonify({"reply": reply_text})

@@ -2,6 +2,7 @@ from flask import Blueprint, session, request, redirect, url_for, flash, render_
 from app.models.admin import PrincipalDataInfo
 from app.utils.form import PrincipalDataForm
 from app.extensions import db
+from werkzeug.security import generate_password_hash
 
 add_principal_bp = Blueprint(
     "add_principal",
@@ -13,14 +14,10 @@ add_principal_bp = Blueprint(
 def add_principal():
 
     principal_data_form = PrincipalDataForm()
-
     if not session.get("admin"):
         return redirect(url_for("login.login"))
-
     try:
-
         if principal_data_form.validate_on_submit():
-        
             principal_id = principal_data_form.principal_id.data
             first_name = principal_data_form.first_name.data
             last_name = principal_data_form.last_name.data
@@ -40,7 +37,7 @@ def add_principal():
                 institute=institute,
                 institute_code=institute_code,
                 username=username,
-                password=password
+                password_hash=generate_password_hash(password)
             )
 
             db.session.add(principal_data_info)
