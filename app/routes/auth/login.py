@@ -4,7 +4,7 @@ from app.models.admin import PrincipalDataInfo,Admin
 from app.models.principal import TeacherAddInfo
 from app.utils.form import ShiftSelectForm
 from app.extensions import db
-from werkzeug.security import generate_password_hash,check_password_hash
+from werkzeug.security import check_password_hash,generate_password_hash
 
 login_bp = Blueprint("login", __name__, url_prefix="/login")
 
@@ -12,16 +12,22 @@ login_bp = Blueprint("login", __name__, url_prefix="/login")
 def login():
     form = LoginForm()
 
-    # This code run first time for create admin.If admin created. Then remove or comment this code
-    '''
-    admin = Admin(
-        username="admin",
-        password_hash=generate_password_hash("admin123")
-    )
+    admin = Admin.query.first()
 
-    db.session.add(admin)
-    db.session.commit()
-    '''
+    try:
+        if not admin:
+            admin = Admin(
+                username="admin",
+                password_hash=generate_password_hash("admin123")
+            )
+
+            db.session.add(admin)
+            db.session.commit()
+
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Error: {str(e)}","danger")
+
     
     try:
         if form.validate_on_submit():

@@ -15,11 +15,9 @@ class Department(db.Model):
             name="unique_department_per_principal"
         ),
     )
-
-
+    
 class Subjects(db.Model):
     __tablename__ = "subjects"
-
     subject_id = db.Column(db.Integer,primary_key=True,autoincrement=True)
     subject_code = db.Column(db.String(20),nullable=False)
     subject_name = db.Column(db.String(150),nullable=False)
@@ -36,7 +34,6 @@ class Subjects(db.Model):
 
 class Curriculum(db.Model):
     __tablename__ = "curriculum"
-
     curriculum_id = db.Column(db.Integer,primary_key=True,autoincrement=True)
     department_id = db.Column(db.Integer,db.ForeignKey("departments.department_id"),nullable=False)
     semester = db.Column(db.Integer,nullable=False)
@@ -45,7 +42,6 @@ class Curriculum(db.Model):
     department = db.relationship("Department",lazy=True)
 
 class TeacherAssignment(db.Model):
-
     __tablename__ = "teacher_assignments"
     assignment_id = db.Column(db.Integer,primary_key=True,autoincrement=True)
     teacher_id = db.Column(db.Integer,db.ForeignKey("teacher_info.teacher_id"),nullable=False)
