@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 import json
 from flask import Blueprint, render_template, request, jsonify, session
 from mistralai.client import Mistral
@@ -6,10 +7,13 @@ from app.ai.tools import get_student_data, get_student_by_roll
 
 
 ai_bp = Blueprint("ai", __name__, url_prefix="")
+
+load_dotenv() # Loading all the vars from the .env file. Make life ezzy.
+
 MODEL_NAME = "mistral-small-latest"
 
 def get_mistral_client():
-    api_key = os.environ.get("MISTRAL_API_KEY")
+    api_key = os.getenv("MISTRAL_API_KEY")
     if not api_key:
         raise RuntimeError("MISTRAL_API_KEY is not set")
     return Mistral(api_key=api_key)
@@ -127,7 +131,23 @@ def ask_message():
         return jsonify({"error": "message is required"}), 400
     try:
         client = get_mistral_client()
-        messages = [{"role": "user", "content": user_message}]
+
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "You are a helpful assistant for school teachers. "
+                    "You help teachers look up student data, attendance, and marks. "
+                    "Always use the available tools to fetch data — never guess or invent student information. "
+                    "Only answer questions relevant to the school system. "
+                    "DO NOT use any extra formatting. Respond in plain text. "
+                    "When a user asks about anything, don't just give the data only factually. Respond with natural language. "
+                    "Have a Gen-Z tone. Respond with energy!"
+                )
+            },
+            {"role": "user", "content": user_message}
+        ]
+
         response = client.chat.complete(
             model=MODEL_NAME,
             messages=messages,
