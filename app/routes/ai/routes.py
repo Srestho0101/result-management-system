@@ -17,7 +17,7 @@ ai_bp = Blueprint("ai", __name__, url_prefix="")
 
 load_dotenv() # Loading all the vars from the .env file. Make life ezzy.
 
-MODEL_NAME = "mistral-small-latest"
+MODEL_NAME = "mistral-medium-latest"
 
 def get_mistral_client():
     api_key = os.getenv("MISTRAL_API_KEY")
@@ -279,6 +279,7 @@ def ask_message():
             messages=messages,
             tools=TOOLS_SCHEMA,
             tool_choice="auto",
+            temperature=1,
         )
         choice_message = response.choices[0].message
         tool_calls = getattr(choice_message, "tool_calls", None)
