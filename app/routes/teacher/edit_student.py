@@ -23,6 +23,7 @@ def edit_student(student_id):
     teacher_id = session.get("teacher_id")
     principal_id = session.get("temp_principal_id")
     form = AddStudentForm(obj=student_data)
+
     assignments = TeacherAssignment.query.filter_by(
         teacher_id=teacher_id
     ).all()
@@ -34,6 +35,12 @@ def edit_student(student_id):
         Department.principal_id == principal_id,
         Department.department_id.in_(department_ids)
     ).all()
+
+    semesters = sorted({assignment.semester for assignment in assignments})
+    form.semester.choices = [
+        (semester, f"Semester {semester}") for semester in semesters
+    ]
+
     form.department_id.choices = [
         (
             d.department_id,
