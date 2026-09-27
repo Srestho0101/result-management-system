@@ -1,7 +1,7 @@
 {% extends "base/base.html" %}
 
 {% block title %}
-Add Marks
+{% if edit_mode %}Edit Marks{% else %}Add Marks{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -17,7 +17,12 @@ Add Marks
             {% set initials = (name_parts[0][0] ~ (name_parts[-1][0] if name_parts|length > 1 else "")) | upper %}
             <span class="am-avatar">{{ initials }}</span>
             <div>
-                <h1 class="am-title">Add Marks</h1>
+                <div class="am-title-row">
+                    <h1 class="am-title">{% if edit_mode %}Edit Marks{% else %}Add Marks{% endif %}</h1>
+                    {% if edit_mode %}
+                    <span class="am-mode-badge">Editing entry</span>
+                    {% endif %}
+                </div>
                 <p class="am-sub">{{ student.student_full_name }} &middot; Roll {{ student.student_roll }}</p>
             </div>
         </div>
@@ -49,7 +54,7 @@ Add Marks
                     {{ form.get_marks(class="am-input", id="get_marks") }}
                 </div>
 
-                {{ form.submit(class="am-submit") }}
+                {{ form.submit(class="am-submit", value=('Update Marks' if edit_mode else 'Add Marks')) }}
             </form>
         </div>
 
@@ -95,6 +100,12 @@ Add Marks
         const previewMarks = document.getElementById("am-preview-marks");
         const previewCard = document.getElementById("am-preview");
 
+        // Placeholder for subject is value "0" (from the backend's
+        // (0, "Select Subject") choice) — not an empty string.
+        function isSubjectSelected() {
+            return subject.value && subject.value !== "0";
+        }
+
         function resetMarksTopic(text = "Select Marks Topic") {
             marksTopic.innerHTML = "";
 
@@ -114,17 +125,23 @@ Add Marks
                 : "";
             const marksValue = marksInput.value;
 
-            previewSubject.textContent = (subject.value && subjectText) ? subjectText : "\u2014";
+            previewSubject.textContent = (isSubjectSelected() && subjectText) ? subjectText : "\u2014";
             previewTopic.textContent = (marksTopic.value && topicText) ? topicText : "\u2014";
             previewMarks.textContent = marksValue !== "" ? marksValue : "\u2014";
 
-            const ready = subject.value && marksTopic.value && marksValue !== "";
+            const ready = isSubjectSelected() && marksTopic.value && marksValue !== "";
             previewTag.textContent = ready ? "Ready to submit" : "Draft";
             previewTag.classList.toggle("is-ready", !!ready);
-            previewCard.classList.toggle("is-empty", !subject.value && !marksTopic.value && marksValue === "");
+            previewCard.classList.toggle("is-empty", !isSubjectSelected() && !marksTopic.value && marksValue === "");
         }
 
-        resetMarksTopic();
+        // Only reset the topic dropdown if the server didn't already
+        // render one — edit mode (and a failed add-mode validation that
+        // preserved the subject) come with the correct topics pre-filled,
+        // and we must not wipe that out on load.
+        if (marksTopic.options.length === 0) {
+            resetMarksTopic();
+        }
         updatePreview();
 
         let requestController = null;
@@ -136,7 +153,7 @@ Add Marks
             resetMarksTopic();
             updatePreview();
 
-            if (!subjectId) {
+            if (!isSubjectSelected()) {
                 return;
             }
 
@@ -181,6 +198,7 @@ Add Marks
                     option.textContent = topic.name;
 
                     marksTopic.appendChild(option);
+
                 });
 
             } catch (error) {
