@@ -6,53 +6,61 @@ Edit Marks Topic
 
 {% block content %}
 
-<div class="container mt-4">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/edit_marks_topic.css') }}">
 
-    <div class="card shadow">
+<div class="mt-page">
 
-        <div class="card-header">
-            <h4>Edit Marks Topic</h4>
-        </div>
+    <!-- Top bar -->
+    <div class="mt-top">
+        <h1 class="mt-page-title">Edit Marks Topic</h1>
+        <a href="{{ url_for('get_marks.show_marks_system') }}" class="mt-back">
+            <span>&larr;</span> Back
+        </a>
+    </div>
 
-        <div class="card-body">
+    <div class="mt-card">
 
-            <form method="POST">
+        <!-- Left: info panel -->
+        <aside class="mt-aside">
+            <span class="mt-aside-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
+                </svg>
+            </span>
+            <p class="mt-aside-desc">Update this topic's department, subject, name, and full marks below.</p>
+        </aside>
 
+        <!-- Right: form -->
+        <div class="mt-main">
+            <form method="POST" class="mt-form" novalidate>
                 {{ form.hidden_tag() }}
 
-                <!-- Department -->
-                <div class="mb-3">
-                    {{ form.department_id.label(class="form-label") }}
-                    {{ form.department_id(class="form-select", id="department") }}
+                <div class="mt-field">
+                    {{ form.department_id.label(class="mt-label") }}
+                    {{ form.department_id(class="mt-select", id="department") }}
                 </div>
 
-                <!-- Subject -->
-                <div class="mb-3">
-                    {{ form.subject.label(class="form-label") }}
-                    {{ form.subject(class="form-select", id="subject") }}
+                <div class="mt-field">
+                    {{ form.subject.label(class="mt-label") }}
+                    {{ form.subject(class="mt-select", id="subject") }}
                 </div>
 
-                <!-- Topic Name -->
-                <div class="mb-3">
-                    {{ form.add_marks_topic_name.label(class="form-label") }}
-                    {{ form.add_marks_topic_name(class="form-control") }}
+                <div class="mt-row">
+                    <div class="mt-field">
+                        {{ form.add_marks_topic_name.label(class="mt-label") }}
+                        {{ form.add_marks_topic_name(class="mt-input") }}
+                    </div>
+                    <div class="mt-field">
+                        {{ form.full_marks.label(class="mt-label") }}
+                        {{ form.full_marks(class="mt-input") }}
+                    </div>
                 </div>
 
-                <!-- Full Marks -->
-                <div class="mb-3">
-                    {{ form.full_marks.label(class="form-label") }}
-                    {{ form.full_marks(class="form-control") }}
+                <div class="mt-actions">
+                    <a href="{{ url_for('get_marks.show_marks_system') }}" class="mt-cancel">Cancel</a>
+                    {{ form.submit(class="mt-submit") }}
                 </div>
-
-                {{ form.submit(class="btn btn-success") }}
-
-                <a href="{{ url_for('get_marks.show_marks_system') }}"
-                   class="btn btn-secondary">
-                    Cancel
-                </a>
-
             </form>
-
         </div>
 
     </div>
@@ -66,14 +74,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const department = document.getElementById("department");
     const subject = document.getElementById("subject");
 
+    let requestController = null;
+
     department.addEventListener("change", function () {
 
         const departmentId = this.value;
 
+        if (requestController) {
+            requestController.abort();
+        }
+        requestController = new AbortController();
+
         subject.innerHTML =
             '<option value="">Loading...</option>';
 
-        fetch(`/get_subject/api/subjects/${departmentId}`)
+        fetch(`/get_subject/api/subjects/${departmentId}`, { signal: requestController.signal })
 
             .then(response => response.json())
 
@@ -97,6 +112,10 @@ document.addEventListener("DOMContentLoaded", function () {
             })
 
             .catch(error => {
+
+                if (error.name === "AbortError") {
+                    return;
+                }
 
                 console.log(error);
 
