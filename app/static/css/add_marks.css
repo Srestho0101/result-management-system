@@ -1,5 +1,5 @@
 /* ==========================================================
-   Add Marks – form + live preview
+   Add / Edit Marks – form + live preview
    File: static/css/add_marks.css
    All classes are prefixed .am- so they won't clash with the site.
    ========================================================== */
@@ -66,6 +66,13 @@ body { background: var(--am-page); }
   color: #fff;
   background: linear-gradient(135deg, var(--am-blue-light), var(--am-blue));
 }
+
+.am-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
 .am-title {
   margin: 0;
   font-family: "Poppins", "Inter", system-ui, sans-serif;
@@ -77,6 +84,18 @@ body { background: var(--am-page); }
   -webkit-text-fill-color: transparent;
   color: var(--am-blue);
 }
+.am-mode-badge {
+  padding: .25rem .7rem;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  color: var(--am-deep);
+  background: var(--am-soft);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
 .am-sub { margin: 2px 0 0; font-size: .86rem; color: var(--am-muted); overflow-wrap: anywhere; }
 
 .am-back {
