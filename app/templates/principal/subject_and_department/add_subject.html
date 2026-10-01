@@ -1,25 +1,108 @@
-{% extends "base/base.html"%}
-{% block title%} Add Subject {% endblock %}
+{% extends "base/base.html" %}
+{% block title %} Add Subject {% endblock %}
 
-{% block content%}
-<div class="form">
-    <h2>Add Subject page </h2>
-    <form method="POST">
-        
-        {{ form.hidden_tag() }}
-        <div class="mb-3">
-            {{ form.subject_code.label(class="ap-label")}}
-            {{ form.subject_code(class="form-control")}}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add_form.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="af-page">
+
+    <div class="af-topbar">
+        <div>
+            <h1 class="af-page-title">Add Subject</h1>
+            <p class="af-page-sub">Create a new subject for your department</p>
         </div>
+        <a href="javascript:history.back()" class="af-back">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Go Back
+        </a>
+    </div>
 
-        <div class="mb-3">
-            {{ form.subject_name.label(class="ap-label")}}
-            {{ form.subject_name(class="form-control")}}
-        </div>
+    <div class="af-card">
 
-        <div class="mb-3 btn">{{ form.submit() }}</div>
+        <!-- Left info panel -->
+        <aside class="af-side">
+            <h2 class="af-side-heading">
+                <span class="af-icon-inline">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                    </svg>
+                </span>
+                New Subject
+            </h2>
+            <div class="af-preview">
+                <span class="af-preview-label">Live preview</span>
+                <div class="af-preview-row">
+                    <span class="af-preview-code is-empty" id="previewCode">CODE</span>
+                    <span class="af-preview-name is-empty" id="previewName">Subject name</span>
+                </div>
+            </div>
+        </aside>
 
-    </form>
+        <!-- Right form panel -->
+        <section class="af-main">
+            <form method="POST" novalidate>
+                {{ form.hidden_tag() }}
+
+                <div class="af-field">
+                    {{ form.subject_code.label(class="ap-label") }}
+                    {{ form.subject_code(class="form-control", placeholder="e.g. CS101") }}
+                    {% for error in form.subject_code.errors %}
+                        <div class="af-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="af-field">
+                    {{ form.subject_name.label(class="ap-label") }}
+                    {{ form.subject_name(class="form-control", placeholder="e.g. Data Structures") }}
+                    {% for error in form.subject_name.errors %}
+                        <div class="af-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="af-actions">
+                    {{ form.submit(value="Add Subject") }}
+                </div>
+            </form>
+        </section>
+
+    </div>
 </div>
+
+<!-- Inline on purpose: guarantees this runs regardless of whether the
+     base template's extra_js block exists or the static path resolves. -->
+<script>
+(function () {
+    var codeInput = document.querySelector('[name="subject_code"]');
+    var nameInput = document.querySelector('[name="subject_name"]');
+
+    var previewCode = document.getElementById("previewCode");
+    var previewName = document.getElementById("previewName");
+
+    if (!codeInput || !nameInput || !previewCode || !previewName) {
+        return;
+    }
+
+    function updatePreview() {
+        var codeValue = codeInput.value.trim();
+        var nameValue = nameInput.value.trim();
+
+        previewCode.textContent = codeValue ? codeValue.toUpperCase() : "CODE";
+        previewCode.classList.toggle("is-empty", !codeValue);
+
+        previewName.textContent = nameValue || "Subject name";
+        previewName.classList.toggle("is-empty", !nameValue);
+    }
+
+    codeInput.addEventListener("input", updatePreview);
+    nameInput.addEventListener("input", updatePreview);
+
+    updatePreview();
+})();
+</script>
 
 {% endblock %}
