@@ -2,18 +2,18 @@
 {% block title %} Add Department {% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/add_department.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add_form.css') }}">
 {% endblock %}
 
 {% block content %}
-<div class="dept-page">
+<div class="af-page">
 
-    <div class="dept-topbar">
+    <div class="af-topbar">
         <div>
-            <h1 class="dept-page-title">Add Department</h1>
-            <p class="dept-page-sub">Create a new department for your school</p>
+            <h1 class="af-page-title">Add Department</h1>
+            <p class="af-page-sub">Create a new department for your school</p>
         </div>
-        <a href="javascript:history.back()" class="dept-back">
+        <a href="javascript:history.back()" class="af-back">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
             </svg>
@@ -21,49 +21,49 @@
         </a>
     </div>
 
-    <div class="dept-card">
+    <div class="af-card">
 
         <!-- Left info panel -->
-        <aside class="dept-side">
-            <h2 class="dept-side-heading">
-                <span class="dept-icon-inline">
+        <aside class="af-side">
+            <h2 class="af-side-heading">
+                <span class="af-icon-inline">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6M9 10h.01M15 10h.01"/>
                     </svg>
                 </span>
                 New Department
             </h2>
-            <div class="dept-preview">
-                <span class="dept-preview-label">Live preview</span>
-                <div class="dept-preview-row">
-                    <span class="dept-preview-code is-empty" id="previewCode">CODE</span>
-                    <span class="dept-preview-name is-empty" id="previewName">Department name</span>
+            <div class="af-preview">
+                <span class="af-preview-label">Live preview</span>
+                <div class="af-preview-row">
+                    <span class="af-preview-code is-empty" id="previewCode">CODE</span>
+                    <span class="af-preview-name is-empty" id="previewName">Department name</span>
                 </div>
             </div>
         </aside>
 
         <!-- Right form panel -->
-        <section class="dept-main">
+        <section class="af-main">
             <form method="POST" novalidate>
                 {{ form.hidden_tag() }}
 
-                <div class="dept-field">
+                <div class="af-field">
                     {{ form.department_code.label(class="ap-label") }}
-                    {{ form.department_code(class="form-control", placeholder="e.g. CSE") }}
+                    {{ form.department_code(class="form-control", placeholder="e.g. CST") }}
                     {% for error in form.department_code.errors %}
-                        <div class="dept-error">{{ error }}</div>
+                        <div class="af-error">{{ error }}</div>
                     {% endfor %}
                 </div>
 
-                <div class="dept-field">
+                <div class="af-field">
                     {{ form.department_name.label(class="ap-label") }}
                     {{ form.department_name(class="form-control", placeholder="e.g. Computer Science") }}
                     {% for error in form.department_name.errors %}
-                        <div class="dept-error">{{ error }}</div>
+                        <div class="af-error">{{ error }}</div>
                     {% endfor %}
                 </div>
 
-                <div class="dept-actions">
+                <div class="af-actions">
                     {{ form.submit(value="Add Department") }}
                 </div>
             </form>
