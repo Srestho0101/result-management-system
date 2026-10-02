@@ -1,4 +1,4 @@
-INSERT INTO student_data
+INSERT OR IGNORE INTO student_data
 (student_roll, student_full_name, semester, "group", cgpa, department_id, principal_id, teacher_id)
 VALUES
 (322053, 'RAHIM UDDIN', 2, 'B', 0, 1, 2006, 1),

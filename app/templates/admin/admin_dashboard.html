@@ -108,6 +108,17 @@
         <span class="action-arrow">→</span>
       </a>
 
+      <form method="post" action="{{ url_for('admin_dashboard.load_sample_students') }}">
+        <button type="submit" class="action-item action-amber action-item-button">
+          <span class="action-icon-wrap">🧪</span>
+          <span class="action-text">
+            <span class="action-name">Load Sample Student Data</span>
+            <span class="action-desc">Add test students; existing student rolls are skipped</span>
+          </span>
+          <span class="action-arrow" aria-hidden="true">→</span>
+        </button>
+      </form>
+
       <a href="#" class="action-item action-purple">
         <span class="action-icon-wrap">👨‍🏫</span>
         <div class="action-text">

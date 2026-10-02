@@ -1,4 +1,7 @@
-from flask import Blueprint, render_template, redirect, url_for, flash,session
+from pathlib import Path
+
+from flask import Blueprint, render_template, redirect, url_for, flash, session, current_app
+from sqlalchemy import text
 from app.utils.form import PrincipalDataForm
 from app.models.admin import PrincipalDataInfo
 from app.models.teacher import AddStudentInfo
@@ -25,6 +28,37 @@ def admin_dashboard():
         total_student=total_student,
         total_teacher=total_teacher
     )
+
+
+@admin_bp.route("/load-sample-students", methods=["POST"])
+def load_sample_students():
+    if not session.get("admin"):
+        return redirect(url_for("login.login"))
+
+    if db.engine.dialect.name != "sqlite":
+        flash("Sample student data can only be loaded into the SQLite database.", "danger")
+        return redirect(url_for("admin_dashboard.admin_dashboard"))
+
+    sample_file = Path(current_app.root_path).parent / "import_students.sql"
+    try:
+        sample_sql = sample_file.read_text(encoding="utf-8").strip()
+        if not sample_sql.lower().startswith("insert or ignore into student_data"):
+            raise ValueError("The sample SQL file does not contain the expected idempotent student insert.")
+
+        result = db.session.execute(text(sample_sql))
+        added_count = max(result.rowcount, 0)
+        db.session.commit()
+
+        if added_count:
+            flash(f"Loaded {added_count} sample students.", "success")
+        else:
+            flash("All sample students are already loaded.", "info")
+    except Exception:
+        db.session.rollback()
+        current_app.logger.exception("Failed to load sample students")
+        flash("Could not load sample students. Check that the database is set up correctly.", "danger")
+
+    return redirect(url_for("admin_dashboard.admin_dashboard"))
     
 @admin_bp.route("/views_principals")
 def view_principals():
