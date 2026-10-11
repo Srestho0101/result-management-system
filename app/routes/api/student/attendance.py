@@ -7,17 +7,17 @@ attendance_api_bp = Blueprint(
     url_prefix="/attendance/api/"
 )
 
-@attendance_api_bp.route("/<int:roll>", methods=["GET"])
-def attendance_api(roll):
+@attendance_api_bp.route("/<int:student_roll>", methods=["GET"])
+def attendance_api(student_roll):
 
     student = AddStudentInfo.query.filter_by(
-        student_roll=roll
+        student_roll=student_roll
     ).first()
 
     if not student:
         return jsonify({
             "success": False,
-            "message": f"Student with roll {roll} not found"
+            "message": f"Student with roll {student_roll} not found"
         }), 404
 
     attendance_data = (
@@ -39,7 +39,7 @@ def attendance_api(roll):
 
     return jsonify({
         "success": True,
-        "student_roll": roll,
+        "student_roll": student_roll,
         "total": len(data),
         "data": data
     })
