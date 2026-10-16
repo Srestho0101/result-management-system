@@ -1,55 +1,88 @@
-{% extends "base/admin_base.html" %}
-{% set active_page = 'add' %}
-{% block title %}Add Principal{% endblock %}
-{% block crumb %}Add principal{% endblock %}
+{% extends "base/base.html" %}
+{% block title %} Add Principal {% endblock %}
 
-{% block page_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_pages.css') }}">
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/colors.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add_principal.css') }}">
 {% endblock %}
 
-{% block admin_content %}
-{% from "base/_fields.html" import field %}
+{% block content %}
 
-<div class="ad-stack">
-
-  <header class="ad-pagehead">
-    <div>
-      <h1 class="ad-title">Add principal</h1>
-      <p class="ad-sub">Register a new principal account.</p>
-    </div>
-  </header>
-
-  <form method="POST" class="pg-card pg-form" novalidate>
-    {{ principal_data_form.hidden_tag() }}
-
-    <div class="pg-grid">
-      {{ field(principal_data_form.principal_id) }}
-      {{ field(principal_data_form.mobile_number, auto='tel') }}
-      {{ field(principal_data_form.first_name) }}
-      {{ field(principal_data_form.last_name) }}
-      {{ field(principal_data_form.email, full=True, auto='email') }}
-
-      <hr class="pg-divider">
-
-      {{ field(principal_data_form.institute) }}
-      {{ field(principal_data_form.institute_code) }}
-
-      <hr class="pg-divider">
-
-      {{ field(principal_data_form.username, full=True, auto='username') }}
-      {{ field(principal_data_form.password, toggle=True, auto='new-password') }}
-      {{ field(principal_data_form.retype_password, toggle=True, auto='new-password') }}
-    </div>
-
-    <div class="pg-footer">
-      <a href="{{ url_for('admin_dashboard.admin_dashboard') }}" class="pg-cancel">Cancel</a>
-      {{ principal_data_form.submit(class="pg-submit") }}
-    </div>
-  </form>
-
+{% macro field(f, full=False, auto=None) -%}
+{% set cls = 'ap-input' ~ (' ap-input-error' if f.errors else '') %}
+<div class="ap-field{{ ' ap-field-full' if full }}">
+  <label class="ap-label" for="{{ f.id }}">{{ f.label.text }}{% if f.flags.required %}<span class="req" aria-hidden="true">*</span>{% endif %}</label>
+  {% if auto %}{{ f(class_=cls, autocomplete=auto) }}{% else %}{{ f(class_=cls) }}{% endif %}
+  {% for err in f.errors %}<span class="ap-error">{{ err }}</span>{% endfor %}
 </div>
-{% endblock %}
+{%- endmacro %}
 
-{% block page_js %}
-<script src="{{ url_for('static', filename='js/admin_form.js') }}"></script>
+<div class="ap-blob ap-blob-1" aria-hidden="true"></div>
+<div class="ap-blob ap-blob-2" aria-hidden="true"></div>
+
+<!-- HERO BAR -->
+<header class="ap-hero">
+  <div class="ap-hero-inner">
+    <div class="ap-hero-icon" aria-hidden="true">👤</div>
+    <div>
+      <h1 class="ap-hero-title">Add Principal</h1>
+      <p class="ap-hero-sub">Register a new principal account.</p>
+    </div>
+  </div>
+  <a href="{{ url_for('admin_dashboard.admin_dashboard') }}" class="btn btn-outline btn-sm ap-back-btn">&larr; Back to dashboard</a>
+</header>
+
+<!-- FORM -->
+<div class="ap-wrapper">
+  <div class="ap-card">
+
+    <div class="ap-card-header">
+      <h2 class="ap-card-title">Principal details</h2>
+      <p class="ap-card-desc">Fields marked with <span class="req">*</span> are required.</p>
+    </div>
+
+    <form method="POST" class="ap-form" novalidate>
+      {{ principal_data_form.hidden_tag() }}
+
+      <!-- 1. Personal info -->
+      <section class="ap-section">
+        <h3 class="ap-section-title"><span class="ap-section-num">1</span>Personal information</h3>
+        <div class="ap-grid-2">
+          {{ field(principal_data_form.principal_id) }}
+          {{ field(principal_data_form.mobile_number, auto='tel') }}
+          {{ field(principal_data_form.first_name) }}
+          {{ field(principal_data_form.last_name) }}
+          {{ field(principal_data_form.email, full=True, auto='email') }}
+        </div>
+      </section>
+
+      <!-- 2. Institute -->
+      <section class="ap-section">
+        <h3 class="ap-section-title"><span class="ap-section-num">2</span>Institute</h3>
+        <div class="ap-grid-2">
+          {{ field(principal_data_form.institute) }}
+          {{ field(principal_data_form.institute_code) }}
+        </div>
+      </section>
+
+      <!-- 3. Account -->
+      <section class="ap-section">
+        <h3 class="ap-section-title"><span class="ap-section-num">3</span>Account</h3>
+        <div class="ap-grid-2">
+          {{ field(principal_data_form.username, full=True, auto='username') }}
+          {{ field(principal_data_form.password, auto='new-password') }}
+          {{ field(principal_data_form.retype_password, auto='new-password') }}
+        </div>
+      </section>
+
+      <div class="ap-actions">
+        <a href="{{ url_for('admin_dashboard.admin_dashboard') }}" class="btn btn-secondary">Cancel</a>
+        {{ principal_data_form.submit(class="btn btn-primary ap-submit") }}
+      </div>
+    </form>
+
+  </div>
+</div>
+
 {% endblock %}
