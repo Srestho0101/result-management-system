@@ -1,128 +1,163 @@
-{% extends "base/admin_base.html" %}
-{% set active_page = 'dashboard' %}
-{% block title %}Admin Dashboard{% endblock %}
-{% block crumb %}Admin dashboard{% endblock %}
+{% extends "base/base.html" %}
+{% block title %} Admin Dashboard {% endblock %}
 
-{% block page_css %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/colors.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
 {% endblock %}
 
-{% block admin_content %}
-{% from "base/_icons.html" import ic %}
+{% block content %}
 
-<div class="ad-stack">
+<div class="dash-page">
 
-  <!-- PAGE HEADER -->
-  <section class="ad-pagehead" aria-label="Overview">
-    <div>
-      <h1 class="ad-title">Admin dashboard</h1>
-      <p class="ad-greet">Welcome back, Admin</p>
+    <!-- TOP HEADER -->
+    <header class="dash-header">
+        <div class="dash-header-left">
+            <div class="dash-avatar" aria-hidden="true">A</div>
+            <div>
+                <p class="dash-greeting">Good day,</p>
+                <h1 class="dash-title">Admin Dashboard</h1>
+            </div>
+        </div>
+        <div class="dash-header-right">
+            <span class="dash-badge">Admin</span>
+            {# Change this to your admin logout route if you have one #}
+            <a href="{{ url_for('login.logout_principal') }}" class="dash-signout">Sign out</a>
+        </div>
+    </header>
+
+    <!-- STATS STRIP: one blue gradient bar with all four counts -->
+    <section class="ad-stats" aria-label="Summary">
+
+        <div class="ad-stat">
+            <span class="ad-stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/>
+                </svg>
+            </span>
+            <span class="ad-stat-body">
+                <span class="ad-stat-value">{{ total | default(0) }}</span>
+                <span class="ad-stat-label">Principals</span>
+            </span>
+        </div>
+
+        <div class="ad-stat">
+            <span class="ad-stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+            </span>
+            <span class="ad-stat-body">
+                <span class="ad-stat-value">{{ total_teachers if (total_teachers is defined and total_teachers is not none) else '—' }}</span>
+                <span class="ad-stat-label">Teachers</span>
+            </span>
+        </div>
+
+        <div class="ad-stat">
+            <span class="ad-stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M21.42 10.92a1 1 0 0 0-.02-1.84L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.83l8.57 3.91a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>
+                </svg>
+            </span>
+            <span class="ad-stat-body">
+                <span class="ad-stat-value">{{ total_students if (total_students is defined and total_students is not none) else '—' }}</span>
+                <span class="ad-stat-label">Students</span>
+            </span>
+        </div>
+
+        <div class="ad-stat">
+            <span class="ad-stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/>
+                </svg>
+            </span>
+            <span class="ad-stat-body">
+                <span class="ad-stat-value">{{ pending_results if (pending_results is defined and pending_results is not none) else '—' }}</span>
+                <span class="ad-stat-label">Pending results</span>
+            </span>
+        </div>
+
+    </section>
+
+    <!-- TWO PANELS -->
+    <div class="ad-panels">
+
+        <!-- PRINCIPALS -->
+        <section class="ad-panel" aria-label="Principals">
+            <div class="ad-panel-head">
+                <span class="ad-panel-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/>
+                    </svg>
+                </span>
+                <h2 class="ad-panel-title">Principals</h2>
+            </div>
+
+            <div class="ad-rows">
+
+                <a href="{{ url_for('add_principal.add_principal') }}" class="ad-row ad-row-main">
+                    <span class="ad-row-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M12 5v14M5 12h14"/>
+                        </svg>
+                    </span>
+                    <span class="ad-row-name">Add Principal</span>
+                    <span class="ad-row-arrow" aria-hidden="true">&rarr;</span>
+                </a>
+
+                <a href="{{ url_for('admin_dashboard.view_principals') }}" class="ad-row">
+                    <span class="ad-row-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="8" r="3.5"/>
+                            <path d="M17 8.5a3 3 0 0 1 0 5.9M21 20v-1.6c0-1.8-1.3-3.3-3-3.9"/>
+                        </svg>
+                    </span>
+                    <span class="ad-row-name">All Principals</span>
+                    <span class="ad-row-arrow" aria-hidden="true">&rarr;</span>
+                </a>
+
+                <a href="{{ url_for('admin_dashboard.edit_and_view_principal') }}" class="ad-row">
+                    <span class="ad-row-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/>
+                        </svg>
+                    </span>
+                    <span class="ad-row-name">Edit Principal Info</span>
+                    <span class="ad-row-arrow" aria-hidden="true">&rarr;</span>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- RESULTS -->
+        <section class="ad-panel" aria-label="Results">
+            <div class="ad-panel-head">
+                <span class="ad-panel-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/>
+                    </svg>
+                </span>
+                <h2 class="ad-panel-title">Results</h2>
+                <span class="ad-badge-warn">{{ pending_results if (pending_results is defined and pending_results is not none) else '—' }} pending</span>
+            </div>
+
+            <div class="ad-panel-body">
+                <a href="{{ url_for('upload_dashboard.upload_dashboard') }}" class="ad-big">
+                    <span class="ad-big-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                    </span>
+                    <span class="ad-big-name">Upload Dashboard</span>
+                    <span class="ad-big-desc">Manage and publish results</span>
+                    <span class="ad-big-btn">Open <span aria-hidden="true">&rarr;</span></span>
+                </a>
+            </div>
+        </section>
+
     </div>
-    <a href="{{ url_for('add_principal.add_principal') }}" class="ad-btn">{{ ic('plus') }}Add principal</a>
-  </section>
-
-  {% set panels = [
-    ('principals', 'Principals',      total|default(none),           'home',  'Register, review and edit principal accounts.',
-      [('Add principal', url_for('add_principal.add_principal'), true), ('All principals', url_for('admin_dashboard.view_principals'), false), ('Edit principal info', url_for('admin_dashboard.edit_and_view_principal'), false)]),
-    ('teachers',   'Teachers',        total_teachers|default(none),  'users', 'Teacher tools are not connected to this dashboard yet.', []),
-    ('students',   'Students',        total_students|default(none),  'cap',   'Student tools are not connected to this dashboard yet.', []),
-    ('results',    'Pending results', pending_results|default(none), 'doc',   'Review, upload and publish results.',
-      [('Upload dashboard', url_for('upload_dashboard.upload_dashboard'), true)])
-  ] %}
-
-  <!-- STAT TILES: click one to open its actions underneath -->
-  <section class="ad-stats" aria-label="Summary">
-    {% for key, label, value, icon, desc, links in panels %}
-    <button type="button" class="ad-stat ad-tone-{{ loop.index0 }}" data-open="{{ key }}" aria-expanded="false" aria-controls="ad-detail">
-      <span class="ad-stat-top"><span class="ad-stat-label">{{ label }}</span><span class="ad-tile">{{ ic(icon) }}</span></span>
-      <span class="ad-stat-value{{ ' is-empty' if value is none }}">{{ value if value is not none else '—' }}</span>
-      <span class="ad-stat-foot">View actions<span class="ad-caret">{{ ic('down') }}</span></span>
-    </button>
-    {% endfor %}
-  </section>
-
-  <section class="ad-detail" id="ad-detail" aria-live="polite" hidden>
-    {% for key, label, value, icon, desc, links in panels %}
-    <div class="ad-detail-body" data-panel="{{ key }}" hidden>
-      <div>
-        <h2 class="ad-detail-title">{{ label }}</h2>
-        <p class="ad-detail-desc">{{ desc }}</p>
-      </div>
-      {% if links %}
-      <div class="ad-detail-actions">
-        {% for text, href, primary in links %}<a href="{{ href }}" class="ad-link{{ ' is-primary' if primary }}">{{ text }}</a>{% endfor %}
-      </div>
-      {% endif %}
-    </div>
-    {% endfor %}
-  </section>
-
-  <!-- ACTIVITY / STATUS (tabs) -->
-  <section class="ad-panel" aria-label="Activity and status">
-    <div class="ad-tabs" role="tablist">
-      <button type="button" class="ad-tab" role="tab" id="tab-activity" aria-controls="pane-activity" aria-selected="true">Recent activity</button>
-      <button type="button" class="ad-tab" role="tab" id="tab-status" aria-controls="pane-status" aria-selected="false" tabindex="-1">System status</button>
-    </div>
-    <ul class="ad-tabpanel" role="tabpanel" id="pane-activity" aria-labelledby="tab-activity">
-      {% for text, time in [('Admin signed in','Just now'),('Principal record updated','2 hours ago'),('Result published','Yesterday'),('Student batch imported','3 days ago')] %}
-      <li class="ad-row"><span class="ad-dot is-info"></span>{{ text }}<em>{{ time }}</em></li>
-      {% endfor %}
-    </ul>
-    <ul class="ad-tabpanel" role="tabpanel" id="pane-status" aria-labelledby="tab-status" hidden>
-      {% for name, state, tone in [('Database','Online','ok'),('Auth service','Active','ok'),('Result engine','Idle','warn'),('Notifications','Running','ok')] %}
-      <li class="ad-row"><span class="ad-dot{{ ' is-warn' if tone == 'warn' }}"></span>{{ name }}<em>{{ state }}</em></li>
-      {% endfor %}
-    </ul>
-  </section>
-
-  <!-- HELP BANNER -->
-  <a href="#" class="ad-help">
-    <span class="ad-help-icon">{{ ic('doc') }}</span>
-    <span class="ad-help-text"><strong>Need help?</strong><span>View the full documentation or contact system support.</span></span>
-    <span class="ad-help-cta">Documentation</span>
-  </a>
 
 </div>
-{% endblock %}
 
-{% block page_js %}
-<script>
-(function () {
-  // stat tiles open their actions underneath; click again to close
-  var tiles = document.querySelectorAll('.ad-stat[data-open]');
-  var detail = document.getElementById('ad-detail');
-  var bodies = detail ? detail.querySelectorAll('[data-panel]') : [];
-  tiles.forEach(function (t) {
-    t.addEventListener('click', function () {
-      var wasOpen = t.getAttribute('aria-expanded') === 'true';
-      tiles.forEach(function (x) { x.setAttribute('aria-expanded', 'false'); });
-      bodies.forEach(function (b) { b.hidden = true; });
-      detail.hidden = true;
-      if (wasOpen) return;
-      t.setAttribute('aria-expanded', 'true');
-      bodies.forEach(function (b) { b.hidden = b.getAttribute('data-panel') !== t.getAttribute('data-open'); });
-      detail.hidden = false;
-    });
-  });
-
-  // activity / status tabs (arrow keys supported)
-  var tabs = Array.prototype.slice.call(document.querySelectorAll('.ad-tab'));
-  function pick(tab) {
-    tabs.forEach(function (x) {
-      var on = x === tab;
-      x.setAttribute('aria-selected', on ? 'true' : 'false');
-      x.tabIndex = on ? 0 : -1;
-      document.getElementById(x.getAttribute('aria-controls')).hidden = !on;
-    });
-  }
-  tabs.forEach(function (t, i) {
-    t.addEventListener('click', function () { pick(t); });
-    t.addEventListener('keydown', function (e) {
-      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-      var n = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
-      pick(n); n.focus();
-    });
-  });
-})();
-</script>
 {% endblock %}
