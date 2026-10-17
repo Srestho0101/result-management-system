@@ -1,0 +1,424 @@
+/* ============================================
+   IMPORTED_FILES.CSS
+   Fully self-contained: page + header (.dash-)
+   and uploaded files list (.if-).
+   Same blue and sizing as admin_dashboard.css.
+
+   Local tokens below read your colors.css /
+   styles.css variables and fall back to safe
+   defaults if a variable is missing.
+   ============================================ */
+
+.dash-page {
+  --d-primary: var(--primary-color, #0066cc);
+  --d-primary-dark: var(--primary-dark, #004299);
+  --d-primary-light: var(--primary-light, #e6f0ff);
+  --d-primary-20: var(--primary-rgba-20, rgba(0, 102, 204, .2));
+  --d-gradient: var(--gradient-primary, linear-gradient(135deg, #0066cc 0%, #00d4ff 100%));
+  --d-danger: var(--danger-color, #ef4444);
+  --d-danger-light: var(--danger-light, #fee2e2);
+  --d-white: var(--white, #ffffff);
+  --d-border: var(--border-light, #e2e8f0);
+  --d-border-strong: var(--border-color, #d5dce6);
+  --d-text: var(--text-dark, #1e293b);
+  --d-muted: var(--medium-gray, #64748b);
+
+  --d-r-md: var(--radius-md, 10px);
+  --d-r-full: var(--radius-full, 999px);
+
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* all icons on this page: outline style, safe default size */
+.dash-page svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ---------- Header ---------- */
+.dash-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .85rem;
+  padding: .85rem 1.3rem;
+  background: var(--d-white);
+  border: 1px solid var(--d-border);
+  border-radius: 16px;
+  box-shadow: 0 1px 2px rgba(0, 102, 204, .04), 0 9px 23px rgba(0, 102, 204, .055);
+}
+
+.dash-header-left {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  min-width: 0;
+}
+
+.dash-avatar {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--d-gradient);
+  color: var(--d-white);
+}
+.dash-avatar svg { width: 23px; height: 23px; }
+
+.dash-greeting {
+  margin: 0;
+  font-size: .84rem;
+  color: var(--d-muted);
+}
+
+.dash-title {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+  font-size: 1.35rem;
+  line-height: 1.2;
+  color: var(--d-text);
+}
+
+.dash-header-right {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  flex-shrink: 0;
+}
+
+.dash-signout {
+  display: inline-flex;
+  align-items: center;
+  min-height: 41px;
+  padding: 0 1.05rem;
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--d-muted);
+  text-decoration: none;
+  border: 1px solid var(--d-border);
+  border-radius: var(--d-r-full);
+  transition: color .15s ease, border-color .15s ease, background-color .15s ease;
+}
+.dash-signout:hover {
+  color: var(--d-primary);
+  border-color: var(--d-primary-20);
+  background: var(--d-primary-light);
+}
+
+/* gradient button (Upload PDF) */
+.if-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 41px;
+  padding: 0 1.25rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: .9rem;
+  font-weight: 700;
+  color: var(--d-white);
+  text-decoration: none;
+  white-space: nowrap;
+  background: var(--d-gradient);
+  border-radius: var(--d-r-full);
+  box-shadow: 0 5px 13px var(--d-primary-20);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+/* keep text white: styles.css has a global a:hover color */
+.if-btn:hover {
+  color: var(--d-white);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px var(--d-primary-20);
+}
+
+/* ---------- Files card ---------- */
+.if-card {
+  overflow: hidden;
+  background: var(--d-white);
+  border: 1px solid var(--d-border);
+  border-radius: 16px;
+  box-shadow: 0 1px 2px rgba(0, 102, 204, .04), 0 9px 23px rgba(0, 102, 204, .055);
+}
+
+.if-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .85rem;
+  padding: 1rem 1.3rem;
+  border-bottom: 1px solid var(--d-border);
+}
+.if-head-left {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+}
+.if-title {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+  font-size: 1.12rem;
+  color: var(--d-text);
+}
+.if-chip {
+  padding: .2rem .85rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: .82rem;
+  font-weight: 800;
+  color: var(--d-white);
+  background: var(--d-gradient);
+  border-radius: var(--d-r-full);
+  box-shadow: 0 4px 10px var(--d-primary-20);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Search ---------- */
+.if-search {
+  position: relative;
+  display: block;
+  width: 280px;
+  max-width: 100%;
+  margin: 0;
+}
+.if-search svg {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  width: 17px;
+  height: 17px;
+  transform: translateY(-50%);
+  color: var(--d-muted);
+  pointer-events: none;
+}
+.if-search input {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 1rem 0 2.5rem;
+  font-family: 'Inter', sans-serif;
+  font-size: .9rem;
+  color: var(--d-text);
+  background: var(--d-white);
+  border: 1.5px solid var(--d-border-strong);
+  border-radius: 12px;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.if-search input::placeholder { color: var(--d-muted); opacity: .8; }
+.if-search input:hover { border-color: var(--d-primary-20); }
+.if-search input:focus {
+  outline: none;
+  border-color: var(--d-primary);
+  box-shadow: 0 0 0 3px var(--d-primary-20);
+}
+
+/* ---------- List ---------- */
+.if-cols,
+.if-row {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 190px 130px;
+  align-items: center;
+  gap: .9rem;
+}
+.if-cols[hidden],
+.if-row[hidden] { display: none; }
+
+.if-cols {
+  padding: .8rem 1.3rem;
+  background: var(--d-primary-light);
+  border-bottom: 1px solid var(--d-border);
+  font-size: .76rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--d-primary-dark);
+}
+.if-cols-end { text-align: right; }
+
+.if-list {
+  list-style: none;
+  margin: 0;
+  padding: .4rem;
+}
+
+.if-row {
+  padding: .7rem .9rem;
+  border-radius: 12px;
+  transition: background-color .15s ease;
+}
+.if-row + .if-row { border-top: 1px solid var(--d-border); }
+.if-row:hover { background: var(--d-primary-light); }
+
+.if-num {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--d-primary-light);
+  color: var(--d-primary);
+  font-size: .8rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.if-row:hover .if-num { background: var(--d-white); }
+
+.if-main {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  min-width: 0;
+}
+.if-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--d-r-md);
+  color: var(--d-primary);
+  background: var(--d-primary-light);
+  transition: background-color .15s ease;
+}
+.if-row:hover .if-icon { background: var(--d-white); }
+.if-icon svg { width: 20px; height: 20px; }
+
+.if-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: .95rem;
+  font-weight: 600;
+  color: var(--d-text);
+}
+.if-date {
+  white-space: nowrap;
+  font-size: .85rem;
+  color: var(--d-muted);
+}
+
+/* no search results */
+.if-none {
+  margin: 0;
+  padding: 2.2rem 1.25rem;
+  text-align: center;
+  font-size: .95rem;
+  color: var(--d-muted);
+}
+.if-none[hidden] { display: none; }
+
+/* ---------- Delete ---------- */
+.if-actions { display: flex; justify-content: flex-end; }
+.if-delete-form { margin: 0; display: flex; }
+
+.if-del {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  min-height: 38px;
+  padding: 0 1rem;
+  font-family: 'Inter', sans-serif;
+  font-size: .86rem;
+  font-weight: 700;
+  color: var(--d-danger);
+  background: var(--d-white);
+  border: 1.5px solid var(--d-danger-light);
+  border-radius: var(--d-r-full);
+  cursor: pointer;
+  transition: color .15s ease, background-color .15s ease, border-color .15s ease;
+}
+.if-del svg { width: 16px; height: 16px; }
+.if-del:hover {
+  color: var(--d-white);
+  background: var(--d-danger);
+  border-color: var(--d-danger);
+}
+
+/* ---------- Empty state ---------- */
+.if-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+  padding: 2.8rem 1.25rem;
+  text-align: center;
+}
+.if-empty p {
+  margin: 0;
+  font-size: .95rem;
+  color: var(--d-muted);
+}
+.if-empty-icon {
+  width: 58px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: .3rem;
+  border-radius: 50%;
+  background: var(--d-primary-light);
+  color: var(--d-primary);
+}
+.if-empty-icon svg { width: 27px; height: 27px; }
+
+/* ---------- Focus ---------- */
+.if-btn:focus-visible,
+.if-del:focus-visible,
+.dash-signout:focus-visible {
+  outline: 2px solid var(--d-primary);
+  outline-offset: 2px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 760px) {
+  .dash-header { flex-wrap: wrap; }
+  .dash-header-right { width: 100%; }
+  .dash-header-right .dash-signout,
+  .dash-header-right .if-btn { flex: 1; justify-content: center; }
+}
+
+@media (max-width: 640px) {
+  .if-cols { display: none; }
+
+  .if-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: .75rem;
+    row-gap: .15rem;
+    padding: .7rem .8rem;
+  }
+  .if-num { display: none; }
+  .if-main { grid-column: 1; grid-row: 1; }
+  .if-date { grid-column: 1; grid-row: 2; padding-left: calc(40px + .75rem); font-size: .8rem; }
+  .if-actions { grid-column: 2; grid-row: 1 / 3; }
+
+  .if-search { width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .dash-page { padding: 1rem; gap: 1rem; }
+  .dash-header { padding: .75rem .95rem; }
+  .dash-avatar { width: 42px; height: 42px; }
+  .dash-title { font-size: 1.1rem; }
+  .if-head { padding: .9rem 1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .if-btn, .if-del, .if-row, .if-icon, .dash-signout, .if-search input { transition: none; }
+  .if-btn:hover { transform: none; }
+}
