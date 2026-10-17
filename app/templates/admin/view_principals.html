@@ -1,81 +1,127 @@
-{% extends "base/admin_base.html" %}
-{% set active_page = 'principals' %}
-{% block title %}View Principals{% endblock %}
-{% block crumb %}All principals{% endblock %}
+{% extends "base/base.html" %}
+{% block title %} All Principals {% endblock %}
 
-{% block page_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_pages.css') }}">
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/colors.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/view_principals.css') }}">
 {% endblock %}
 
-{% block admin_content %}
-{% from "base/_icons.html" import ic %}
+{% block content %}
 {% set items = principals|list %}
 
-<div class="ad-stack">
+<div class="dash-page">
 
-  <header class="ad-pagehead">
-    <div>
-      <h1 class="ad-title">All principals</h1>
-      <p class="ad-sub">View registered principal accounts.</p>
-    </div>
-    <a href="{{ url_for('add_principal.add_principal') }}" class="ad-btn">{{ ic('plus') }}Add principal</a>
-  </header>
-
-  <div class="pg-top">
-    <label class="pg-find">
-      {{ ic('search') }}
-      <input type="search" id="pg-search" placeholder="Search by name or principal ID" autocomplete="off" aria-label="Search principals"{% if not items %} disabled{% endif %}>
-    </label>
-    <p class="pg-count" aria-live="polite">
-      <strong data-shown>{{ items|length }}</strong>
-      <span data-label data-total="Total principals" data-match="Matching principals">Total principals</span>
-    </p>
-  </div>
-
-  <section class="pg-card pg-listcard" aria-label="Principal list">
-    {% if items %}
-
-    <div class="pg-cols" aria-hidden="true">
-      <span>#</span><span>Principal ID</span><span>Full name</span><span>Action</span>
-    </div>
-
-    <ul class="pg-list">
-      {% for principal in items %}
-      <li class="pg-row" data-search="{{ (principal.principal_id ~ ' ' ~ principal.first_name ~ ' ' ~ principal.last_name)|lower }}">
-        <span class="pg-num">{{ loop.index }}</span>
-        <span class="pg-id">{{ principal.principal_id }}</span>
-        <div class="pg-person">
-          <span class="pg-avatar">{{ principal.first_name[:1]|upper }}{{ principal.last_name[:1]|upper }}</span>
-          <span class="pg-name">{{ principal.first_name }} {{ principal.last_name }}</span>
+    <!-- TOP HEADER -->
+    <header class="dash-header">
+        <div class="dash-header-left">
+            <div class="dash-avatar" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="8" r="3.5"/>
+                    <path d="M17 8.5a3 3 0 0 1 0 5.9M21 20v-1.6c0-1.8-1.3-3.3-3-3.9"/>
+                </svg>
+            </div>
+            <div>
+                <p class="dash-greeting">Admin</p>
+                <h1 class="dash-title">All Principals</h1>
+            </div>
         </div>
-        <div class="pg-row-actions">
-          <a href="{{ url_for('admin_dashboard.principal_details', principal_id=principal.principal_id) }}" class="pg-view">View {{ ic('arrow') }}</a>
+        <div class="dash-header-right">
+            <a href="{{ url_for('admin_dashboard.admin_dashboard') }}" class="dash-signout">&larr; Dashboard</a>
         </div>
-      </li>
-      {% endfor %}
-    </ul>
+    </header>
 
-    <div class="pg-empty" id="pg-nomatch" hidden>
-      <span class="pg-empty-icon">{{ ic('search') }}</span>
-      <p class="pg-empty-title">No principals match your search</p>
-      <p class="pg-empty-sub">Try a different name or ID.</p>
+    <!-- SEARCH + COUNT -->
+    <div class="vp-top">
+        <label class="vp-find">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
+            </svg>
+            <input type="search" id="vp-search" placeholder="Search by name or principal ID" autocomplete="off" aria-label="Search principals"{% if not items %} disabled{% endif %}>
+        </label>
+        <p class="vp-count" aria-live="polite">
+            <strong id="vp-shown">{{ items|length }}</strong>
+            <span id="vp-label" data-total="Total principals" data-match="Matching principals">Total principals</span>
+        </p>
     </div>
 
-    {% else %}
+    <!-- LIST -->
+    <section class="vp-card" aria-label="Principal list">
+        {% if items %}
 
-    <div class="pg-empty">
-      <span class="pg-empty-icon">{{ ic('users') }}</span>
-      <p class="pg-empty-title">No principals found</p>
-      <p class="pg-empty-sub">There are no principals registered in the system yet.</p>
-      <a href="{{ url_for('add_principal.add_principal') }}" class="ad-btn">{{ ic('plus') }}Add first principal</a>
-    </div>
+        <div class="vp-cols" aria-hidden="true">
+            <span>#</span><span>Principal ID</span><span>Full name</span><span class="vp-cols-end">Action</span>
+        </div>
 
-    {% endif %}
-  </section>
+        <ul class="vp-list">
+            {% for principal in items %}
+            <li class="vp-row" data-search="{{ (principal.principal_id ~ ' ' ~ principal.first_name ~ ' ' ~ principal.last_name)|lower }}">
+                <span class="vp-num">{{ loop.index }}</span>
+                <span class="vp-id">{{ principal.principal_id }}</span>
+                <div class="vp-person">
+                    <span class="vp-avatar">{{ principal.first_name[:1]|upper }}{{ principal.last_name[:1]|upper }}</span>
+                    <span class="vp-name">{{ principal.first_name }} {{ principal.last_name }}</span>
+                </div>
+                <div class="vp-actions">
+                    <a href="{{ url_for('admin_dashboard.principal_details', principal_id=principal.principal_id) }}" class="vp-view">View <span aria-hidden="true">&rarr;</span></a>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <div class="vp-empty" id="vp-nomatch" hidden>
+            <span class="vp-empty-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
+                </svg>
+            </span>
+            <p class="vp-empty-title">No principals match your search</p>
+            <p class="vp-empty-sub">Try a different name or ID.</p>
+        </div>
+
+        {% else %}
+
+        <div class="vp-empty">
+            <span class="vp-empty-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="8" r="3.5"/>
+                    <path d="M17 8.5a3 3 0 0 1 0 5.9M21 20v-1.6c0-1.8-1.3-3.3-3-3.9"/>
+                </svg>
+            </span>
+            <p class="vp-empty-title">No principals found</p>
+            <p class="vp-empty-sub">There are no principals registered in the system yet.</p>
+        </div>
+
+        {% endif %}
+    </section>
 
 </div>
-{% endblock %}
 
-{% block page_js %}
-<script src="{{ url_for('static', filename='js/admin_list.js') }}"></script>
+<script>
+(function () {
+  // live search by name or principal ID
+  var input = document.getElementById('vp-search');
+  if (!input) return;
+  var rows = document.querySelectorAll('.vp-row');
+  var cols = document.querySelector('.vp-cols');
+  var shown = document.getElementById('vp-shown');
+  var label = document.getElementById('vp-label');
+  var none = document.getElementById('vp-nomatch');
+
+  input.addEventListener('input', function () {
+    var q = input.value.trim().toLowerCase();
+    var n = 0;
+    rows.forEach(function (row) {
+      var hit = !q || row.getAttribute('data-search').indexOf(q) !== -1;
+      row.hidden = !hit;
+      if (hit) n++;
+    });
+    shown.textContent = n;
+    label.textContent = q ? label.getAttribute('data-match') : label.getAttribute('data-total');
+    none.hidden = n !== 0;
+    cols.hidden = n === 0;
+  });
+})();
+</script>
+
 {% endblock %}

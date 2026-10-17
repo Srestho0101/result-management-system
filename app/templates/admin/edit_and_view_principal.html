@@ -1,178 +1,196 @@
-{% extends "base/admin_base.html" %}
-{% set active_page = 'principals' %}
+{% extends "base/base.html" %}
+{% block title %} Manage Principals {% endblock %}
 
-{% block title %}Edit & Manage Principals{% endblock %}
-{% block crumb %}Manage principals{% endblock %}
-
-{% block page_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_pages.css') }}">
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/colors.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/view_and_edit_principal.css') }}">
 {% endblock %}
 
-{% block admin_content %}
-{% from "base/_icons.html" import ic %}
+{% block content %}
 {% set items = principals|list %}
 
-<div class="ad-stack">
+<div class="dash-page">
 
-  <!-- Page Header -->
-  <header class="ad-pagehead">
-    <div>
-      <h1 class="ad-title">Manage principals</h1>
-      <p class="ad-sub">Edit or remove principal accounts.</p>
-    </div>
+    <!-- TOP HEADER -->
+    <header class="dash-header">
+        <div class="dash-header-left">
+            <div class="dash-avatar" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/>
+                </svg>
+            </div>
+            <div>
+                <p class="dash-greeting">Admin</p>
+                <h1 class="dash-title">Manage Principals</h1>
+            </div>
+        </div>
+        <div class="dash-header-right">
+            <a href="{{ url_for('admin_dashboard.admin_dashboard') }}" class="dash-signout">&larr; Dashboard</a>
+        </div>
+    </header>
 
-    <a href="{{ url_for('add_principal.add_principal') }}" class="ad-btn">
-      {{ ic('plus') }} Add principal
-    </a>
-  </header>
-
-  <!-- Search -->
-  <div class="pg-top">
-    <label class="pg-find">
-      {{ ic('search') }}
-      <input
-        type="search"
-        id="pg-search"
-        placeholder="Search by name or principal ID"
-        autocomplete="off"
-        aria-label="Search principals"
-        {% if not items %}disabled{% endif %}
-      >
-    </label>
-
-    <p class="pg-count" aria-live="polite">
-      <strong data-shown>{{ items|length }}</strong>
-      <span
-        data-label
-        data-total="Total principals"
-        data-match="Matching principals"
-      >Total principals</span>
-    </p>
-  </div>
-
-  <!-- Principal List -->
-  <section class="pg-card pg-listcard pg-listcard--manage"
-           aria-label="Principal list">
-
-    {% if items %}
-
-      <div class="pg-cols" aria-hidden="true">
-        <span>#</span>
-        <span>Principal ID</span>
-        <span>Full name</span>
-        <span>Actions</span>
-      </div>
-
-      <ul class="pg-list">
-        {% for principal in items %}
-        <li
-          class="pg-row"
-          data-search="{{ (principal.principal_id ~ ' ' ~ principal.first_name ~ ' ' ~ principal.last_name)|lower }}"
-        >
-          <span class="pg-num">{{ loop.index }}</span>
-
-          <span class="pg-id">{{ principal.principal_id }}</span>
-
-          <div class="pg-person">
-            <span class="pg-avatar">
-              {{ principal.first_name[:1]|upper }}{{ principal.last_name[:1]|upper }}
-            </span>
-            <span class="pg-name">
-              {{ principal.first_name }} {{ principal.last_name }}
-            </span>
-          </div>
-
-          <div class="pg-row-actions">
-
-            <!-- Edit -->
-            <a
-              href="{{ url_for('admin_dashboard.edit_principal', principal_id=principal.principal_id) }}"
-              class="pg-edit"
-            >
-              {{ ic('edit') }} Edit
-            </a>
-
-            <!-- Delete -->
-            <form
-              method="POST"
-              action="{{ url_for('admin_dashboard.delete_principal', principal_id=principal.principal_id) }}"
-              class="delete-form"
-            >
-              <button
-                type="button"
-                class="pg-del delete-btn"
-                data-name="{{ principal.first_name }} {{ principal.last_name }}"
-                aria-label="Delete {{ principal.first_name }} {{ principal.last_name }}"
-                title="Delete"
-              >
-                {{ ic('trash') }}
-              </button>
-            </form>
-
-          </div>
-        </li>
-        {% endfor %}
-      </ul>
-
-      <!-- No Search Results -->
-      <div class="pg-empty" id="pg-nomatch" hidden>
-        <span class="pg-empty-icon">{{ ic('search') }}</span>
-        <p class="pg-empty-title">No principals match your search</p>
-        <p class="pg-empty-sub">Try a different name or ID.</p>
-      </div>
-
-    {% else %}
-
-      <!-- Empty State -->
-      <div class="pg-empty">
-        <span class="pg-empty-icon">{{ ic('users') }}</span>
-        <p class="pg-empty-title">No principals found</p>
-        <p class="pg-empty-sub">
-          There are no principals registered in the system yet.
+    <!-- SEARCH + COUNT -->
+    <div class="mp-top">
+        <label class="mp-find">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
+            </svg>
+            <input type="search" id="mp-search" placeholder="Search by name or principal ID" autocomplete="off" aria-label="Search principals"{% if not items %} disabled{% endif %}>
+        </label>
+        <p class="mp-count" aria-live="polite">
+            <strong id="mp-shown">{{ items|length }}</strong>
+            <span id="mp-label" data-total="Total principals" data-match="Matching principals">Total principals</span>
         </p>
-
-        <a href="{{ url_for('add_principal.add_principal') }}"
-           class="ad-btn">
-          {{ ic('plus') }} Add first principal
-        </a>
-      </div>
-
-    {% endif %}
-
-  </section>
-
-  <!-- Delete Confirmation Dialog -->
-  <dialog class="pg-dialog"
-          id="pg-dialog"
-          aria-labelledby="pg-dialog-title">
-
-    <div class="pg-dialog-body">
-      <span class="pg-dialog-icon">{{ ic('trash') }}</span>
-
-      <h2 id="pg-dialog-title">Delete principal?</h2>
-
-      <p>
-        You are about to permanently delete
-        <strong data-name></strong>.
-        This can't be undone.
-      </p>
     </div>
 
-    <div class="pg-dialog-foot">
-      <button type="button" class="pg-cancel" data-cancel>
-        Cancel
-      </button>
+    <!-- LIST -->
+    <section class="mp-card" aria-label="Principal list">
+        {% if items %}
 
-      <button type="button" class="pg-danger" data-confirm>
-        Delete
-      </button>
-    </div>
+        <div class="mp-cols" aria-hidden="true">
+            <span>#</span><span>Principal ID</span><span>Full name</span><span class="mp-cols-end">Actions</span>
+        </div>
 
-  </dialog>
+        <ul class="mp-list">
+            {% for principal in items %}
+            <li class="mp-row" data-search="{{ (principal.principal_id ~ ' ' ~ principal.first_name ~ ' ' ~ principal.last_name)|lower }}">
+                <span class="mp-num">{{ loop.index }}</span>
+                <span class="mp-id">{{ principal.principal_id }}</span>
+                <div class="mp-person">
+                    <span class="mp-avatar">{{ principal.first_name[:1]|upper }}{{ principal.last_name[:1]|upper }}</span>
+                    <span class="mp-name">{{ principal.first_name }} {{ principal.last_name }}</span>
+                </div>
+                <div class="mp-actions">
+
+                    <!-- Edit -->
+                    <a href="{{ url_for('admin_dashboard.edit_principal', principal_id=principal.principal_id) }}" class="mp-edit">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/>
+                        </svg>
+                        Edit
+                    </a>
+
+                    <!-- Delete -->
+                    <form method="POST" action="{{ url_for('admin_dashboard.delete_principal', principal_id=principal.principal_id) }}" class="mp-delete-form">
+                        <button type="button" class="mp-del" data-name="{{ principal.first_name }} {{ principal.last_name }}" aria-label="Delete {{ principal.first_name }} {{ principal.last_name }}" title="Delete">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/>
+                            </svg>
+                        </button>
+                    </form>
+
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <!-- No search results -->
+        <div class="mp-empty" id="mp-nomatch" hidden>
+            <span class="mp-empty-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
+                </svg>
+            </span>
+            <p class="mp-empty-title">No principals match your search</p>
+            <p class="mp-empty-sub">Try a different name or ID.</p>
+        </div>
+
+        {% else %}
+
+        <!-- Empty state -->
+        <div class="mp-empty">
+            <span class="mp-empty-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="8" r="3.5"/>
+                    <path d="M17 8.5a3 3 0 0 1 0 5.9M21 20v-1.6c0-1.8-1.3-3.3-3-3.9"/>
+                </svg>
+            </span>
+            <p class="mp-empty-title">No principals found</p>
+            <p class="mp-empty-sub">There are no principals registered in the system yet.</p>
+        </div>
+
+        {% endif %}
+    </section>
 
 </div>
-{% endblock %}
 
-{% block page_js %}
-<script src="{{ url_for('static', filename='js/admin_list.js') }}"></script>
+<!-- DELETE CONFIRMATION -->
+<dialog class="mp-dialog" id="mp-dialog" aria-labelledby="mp-dialog-title">
+    <div class="mp-dialog-body">
+        <span class="mp-dialog-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/>
+            </svg>
+        </span>
+        <h2 id="mp-dialog-title">Delete principal?</h2>
+        <p>You are about to permanently delete <strong id="mp-dialog-name"></strong>. This can't be undone.</p>
+    </div>
+    <div class="mp-dialog-foot">
+        <button type="button" class="mp-cancel" id="mp-cancel">Cancel</button>
+        <button type="button" class="mp-danger" id="mp-confirm">Delete</button>
+    </div>
+</dialog>
+
+<script>
+(function () {
+  // ---- live search by name or principal ID ----
+  var input = document.getElementById('mp-search');
+  if (input) {
+    var rows = document.querySelectorAll('.mp-row');
+    var cols = document.querySelector('.mp-cols');
+    var shown = document.getElementById('mp-shown');
+    var label = document.getElementById('mp-label');
+    var none = document.getElementById('mp-nomatch');
+
+    input.addEventListener('input', function () {
+      var q = input.value.trim().toLowerCase();
+      var n = 0;
+      rows.forEach(function (row) {
+        var hit = !q || row.getAttribute('data-search').indexOf(q) !== -1;
+        row.hidden = !hit;
+        if (hit) n++;
+      });
+      shown.textContent = n;
+      label.textContent = q ? label.getAttribute('data-match') : label.getAttribute('data-total');
+      none.hidden = n !== 0;
+      cols.hidden = n === 0;
+    });
+  }
+
+  // ---- delete confirmation ----
+  var dialog = document.getElementById('mp-dialog');
+  var nameEl = document.getElementById('mp-dialog-name');
+  var pending = null;
+  if (!dialog) return;
+
+  document.querySelectorAll('.mp-del').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      pending = btn.closest('form');
+      var name = btn.getAttribute('data-name');
+      if (typeof dialog.showModal !== 'function') {
+        // very old browsers: plain confirm
+        if (window.confirm('Delete ' + name + '? This can\'t be undone.')) pending.submit();
+        return;
+      }
+      nameEl.textContent = name;
+      dialog.showModal();
+    });
+  });
+
+  document.getElementById('mp-cancel').addEventListener('click', function () {
+    pending = null;
+    dialog.close();
+  });
+  document.getElementById('mp-confirm').addEventListener('click', function () {
+    dialog.close();
+    if (pending) pending.submit();
+  });
+  // click on the dark backdrop closes it
+  dialog.addEventListener('click', function (e) {
+    if (e.target === dialog) { pending = null; dialog.close(); }
+  });
+})();
+</script>
+
 {% endblock %}

@@ -1,51 +1,81 @@
-{% extends "base/admin_base.html" %}
-{% set active_page = 'principals' %}
-{% block title %}Edit Principal{% endblock %}
-{% block crumb %}Edit principal{% endblock %}
+{% extends "base/base.html" %}
+{% block title %} Edit Principal {% endblock %}
 
-{% block page_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_pages.css') }}">
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/colors.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add_principal.css') }}">
 {% endblock %}
 
-{% block admin_content %}
-{% from "base/_icons.html" import ic %}
-{% from "base/_fields.html" import field %}
+{% block content %}
 
-<div class="ad-stack">
-
-  <header class="ad-pagehead">
-    <div>
-      <h1 class="ad-title">Edit principal</h1>
-      <p class="ad-sub">Update the principal's information.</p>
-    </div>
-    <a href="{{ url_for('admin_dashboard.edit_and_view_principal') }}" class="pg-ghost">{{ ic('back') }}Back</a>
-  </header>
-
-  <form method="POST" class="pg-card pg-form" novalidate>
-    {{ form.hidden_tag() }}
-
-    <div class="pg-grid">
-      {{ field(form.principal_id) }}
-      {{ field(form.mobile_number, auto='tel') }}
-      {{ field(form.first_name) }}
-      {{ field(form.last_name) }}
-      {{ field(form.email, full=True, auto='email') }}
-
-      <hr class="pg-divider">
-
-      {{ field(form.username, auto='username') }}
-      {{ field(form.password, toggle=True, auto='new-password', ph='Leave blank to keep current password') }}
-    </div>
-
-    <div class="pg-footer">
-      <a href="{{ url_for('admin_dashboard.edit_and_view_principal') }}" class="pg-cancel">Cancel</a>
-      <button type="submit" class="pg-submit">Update principal</button>
-    </div>
-  </form>
-
+{% macro field(f, full=False, auto=None, ph=None) -%}
+{% set cls = 'ap-input' ~ (' ap-input-error' if f.errors else '') %}
+{% set kw = {'class_': cls} %}
+{% if auto %}{% set _ = kw.update({'autocomplete': auto}) %}{% endif %}
+{% if ph %}{% set _ = kw.update({'placeholder': ph}) %}{% endif %}
+<div class="ap-field{{ ' ap-field-full' if full }}">
+  <label class="ap-label" for="{{ f.id }}">{{ f.label.text }}{% if f.flags.required %}<span class="req" aria-hidden="true">*</span>{% endif %}</label>
+  {{ f(**kw) }}
+  {% for err in f.errors %}<span class="ap-error">{{ err }}</span>{% endfor %}
 </div>
-{% endblock %}
+{%- endmacro %}
 
-{% block page_js %}
-<script src="{{ url_for('static', filename='js/admin_form.js') }}"></script>
+<div class="ap-blob ap-blob-1" aria-hidden="true"></div>
+<div class="ap-blob ap-blob-2" aria-hidden="true"></div>
+
+<!-- HERO BAR -->
+<header class="ap-hero">
+  <div class="ap-hero-inner">
+    <div class="ap-hero-icon" aria-hidden="true">✏️</div>
+    <div>
+      <h1 class="ap-hero-title">Edit Principal</h1>
+      <p class="ap-hero-sub">Update the principal's information.</p>
+    </div>
+  </div>
+  <a href="{{ url_for('admin_dashboard.edit_and_view_principal') }}" class="btn btn-outline btn-sm ap-back-btn">&larr; Back</a>
+</header>
+
+<!-- FORM -->
+<div class="ap-wrapper">
+  <div class="ap-card">
+
+    <div class="ap-card-header">
+      <h2 class="ap-card-title">Principal details</h2>
+      <p class="ap-card-desc">Fields marked with <span class="req">*</span> are required.</p>
+    </div>
+
+    <form method="POST" class="ap-form" novalidate>
+      {{ form.hidden_tag() }}
+
+      <!-- 1. Personal info -->
+      <section class="ap-section">
+        <h3 class="ap-section-title"><span class="ap-section-num">1</span>Personal information</h3>
+        <div class="ap-grid-2">
+          {{ field(form.principal_id) }}
+          {{ field(form.mobile_number, auto='tel') }}
+          {{ field(form.first_name) }}
+          {{ field(form.last_name) }}
+          {{ field(form.email, full=True, auto='email') }}
+        </div>
+      </section>
+
+      <!-- 2. Account -->
+      <section class="ap-section">
+        <h3 class="ap-section-title"><span class="ap-section-num">2</span>Account</h3>
+        <div class="ap-grid-2">
+          {{ field(form.username, auto='username') }}
+          {{ field(form.password, auto='new-password', ph='Leave blank to keep current password') }}
+        </div>
+      </section>
+
+      <div class="ap-actions">
+        <a href="{{ url_for('admin_dashboard.edit_and_view_principal') }}" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-primary ap-submit">Update principal</button>
+      </div>
+    </form>
+
+  </div>
+</div>
+
 {% endblock %}
