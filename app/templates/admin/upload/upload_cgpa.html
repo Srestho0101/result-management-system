@@ -30,32 +30,38 @@
   <!-- Upload panel -->
   <section class="pu-panel" aria-label="Upload PDF files">
 
-    <form method="POST" enctype="multipart/form-data" class="pu-form" id="pu-form">
+    <form method="POST" enctype="multipart/form-data" id="pu-form">
 
-      <label class="pu-drop" id="pu-drop">
-        <input
-          type="file"
-          name="pdf_files"
-          id="pdf_files"
-          accept=".pdf"
-          multiple
-          required
-        >
-        <span class="pu-drop-icon">
-          <svg viewBox="0 0 24 24">
-            <polyline points="16 16 12 12 8 16"/>
-            <line x1="12" y1="12" x2="12" y2="21"/>
-            <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
-          </svg>
-        </span>
-        <span class="pu-drop-title">Choose or drop PDF files</span>
-        <span class="pu-drop-hint">You can upload multiple PDF files.</span>
-      </label>
+      <div class="pu-box" id="pu-box">
 
-      <div class="pu-side">
-        <p class="pu-count" id="pu-count">No files selected</p>
-        <ul class="pu-selected" id="pu-selected"></ul>
+        <!-- Choose files -->
+        <label class="pu-pick">
+          <input
+            type="file"
+            name="pdf_files"
+            id="pdf_files"
+            accept=".pdf"
+            multiple
+            required
+          >
+          <span class="pu-drop-icon">
+            <svg viewBox="0 0 24 24">
+              <polyline points="16 16 12 12 8 16"/>
+              <line x1="12" y1="12" x2="12" y2="21"/>
+              <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
+            </svg>
+          </span>
+          <span class="pu-drop-title">Choose or drop PDF files</span>
+          <span class="pu-drop-hint">You can upload multiple PDF files.</span>
+        </label>
 
+        <!-- Selected files (shown after choosing) -->
+        <div class="pu-picked" id="pu-picked" hidden>
+          <p class="pu-count" id="pu-count"></p>
+          <ul class="pu-selected" id="pu-selected"></ul>
+        </div>
+
+        <!-- Upload button, at the bottom of the drop box -->
         <button type="submit" class="pu-submit" id="pu-submit">
           <svg viewBox="0 0 24 24">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -64,83 +70,13 @@
           </svg>
           <span>Upload PDFs</span>
         </button>
+
       </div>
 
     </form>
   </section>
 
-  <!-- Uploaded files panel -->
-  <section class="pu-panel" aria-label="Uploaded PDF files">
-
-    <div class="pu-panel-head">
-      <div class="pu-head-left">
-        <h2 class="pu-panel-title">Uploaded PDF Files</h2>
-        <span class="panel-chip">{{ files|length }}</span>
-      </div>
-
-      {% if files %}
-      <label class="pu-search">
-        <svg viewBox="0 0 24 24">
-          <circle cx="11" cy="11" r="8"/>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-        <input type="text" id="pu-search" placeholder="Search files" autocomplete="off">
-      </label>
-      {% endif %}
-    </div>
-
-    {% if files %}
-
-    <div class="pu-cols" aria-hidden="true">
-      <span>#</span>
-      <span>File name</span>
-      <span>Uploaded at</span>
-    </div>
-
-    <ul class="pu-list" id="pu-list">
-      {% for file in files %}
-      <li class="pu-file" data-name="{{ file.filename|lower }}">
-        <span class="pu-file-num">{{ loop.index }}</span>
-        <span class="pu-file-main">
-          <span class="pu-file-icon">
-            <svg viewBox="0 0 24 24">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-              <polyline points="14 2 14 8 20 8"/>
-              <line x1="16" y1="13" x2="8" y2="13"/>
-              <line x1="16" y1="17" x2="8" y2="17"/>
-            </svg>
-          </span>
-          <span class="pu-file-name" title="{{ file.filename }}">{{ file.filename }}</span>
-        </span>
-        <span class="pu-file-date">{{ file.uploaded_at }}</span>
-      </li>
-      {% endfor %}
-    </ul>
-
-    <p class="pu-none" id="pu-none" hidden>No files found.</p>
-
-    <div class="pu-foot" id="pu-foot">
-      <span class="pu-range" id="pu-range"></span>
-      <div class="pu-pager">
-        <button type="button" class="pu-page-btn" id="pu-prev">Prev</button>
-        <button type="button" class="pu-page-btn" id="pu-next">Next</button>
-      </div>
-    </div>
-
-    {% else %}
-
-    <div class="pu-empty">
-      <span class="pu-empty-icon">
-        <svg viewBox="0 0 24 24">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-          <polyline points="14 2 14 8 20 8"/>
-        </svg>
-      </span>
-      <p>No PDF uploaded yet.</p>
-    </div>
-
-    {% endif %}
-  </section>
+  <p class="pu-note">Uploaded files can be viewed under Show Imported Files.</p>
 
 </main>
 
@@ -148,105 +84,103 @@
 
 {% block extra_js %}
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', function () {
 
-    /* ---------- selected files preview ---------- */
-    const input  = document.getElementById('pdf_files');
-    const drop   = document.getElementById('pu-drop');
-    const list   = document.getElementById('pu-selected');
-    const count  = document.getElementById('pu-count');
-    const form   = document.getElementById('pu-form');
-    const submit = document.getElementById('pu-submit');
+    var form   = document.getElementById('pu-form');
+    var box    = document.getElementById('pu-box');
+    var input  = document.getElementById('pdf_files');
+    var picked = document.getElementById('pu-picked');
+    var list   = document.getElementById('pu-selected');
+    var count  = document.getElementById('pu-count');
+    var submit = document.getElementById('pu-submit');
+    var label  = submit.querySelector('span');
 
-    const fmt = (b) => b < 1048576
-      ? Math.max(1, Math.round(b / 1024)) + ' KB'
-      : (b / 1048576).toFixed(1) + ' MB';
+    var PDF_ICON =
+      '<svg viewBox="0 0 24 24">' +
+      '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>' +
+      '<polyline points="14 2 14 8 20 8"/>' +
+      '<line x1="16" y1="13" x2="8" y2="13"/>' +
+      '<line x1="16" y1="17" x2="8" y2="17"/>' +
+      '</svg>';
 
-    input.addEventListener('change', () => {
+    function fmt(bytes) {
+      return bytes < 1048576
+        ? Math.max(1, Math.round(bytes / 1024)) + ' KB'
+        : (bytes / 1048576).toFixed(1) + ' MB';
+    }
+
+    /* ---------- selected files preview + button text ---------- */
+    function update() {
+      var files = Array.prototype.slice.call(input.files);
+
       list.innerHTML = '';
-      const files = Array.from(input.files);
+      picked.hidden = files.length === 0;
 
-      count.textContent = files.length === 0
-        ? 'No files selected'
-        : files.length === 1 ? '1 file selected' : files.length + ' files selected';
+      if (files.length === 0) {
+        label.textContent = 'Upload PDFs';
+        return;
+      }
 
-      files.forEach(f => {
-        const li = document.createElement('li');
+      count.textContent = files.length === 1 ? '1 file selected' : files.length + ' files selected';
+      label.textContent = files.length === 1 ? 'Upload 1 PDF' : 'Upload ' + files.length + ' PDFs';
+
+      files.forEach(function (f) {
+        var li   = document.createElement('li');
         li.className = 'pu-sel-item';
 
-        const name = document.createElement('span');
+        var icon = document.createElement('span');
+        icon.className = 'pu-sel-icon';
+        icon.innerHTML = PDF_ICON;
+
+        var name = document.createElement('span');
         name.className = 'pu-sel-name';
         name.textContent = f.name;
 
-        const size = document.createElement('span');
+        var size = document.createElement('span');
         size.className = 'pu-sel-size';
         size.textContent = fmt(f.size);
 
-        li.append(name, size);
+        li.appendChild(icon);
+        li.appendChild(name);
+        li.appendChild(size);
         list.appendChild(li);
       });
-    });
-
-    ['dragenter', 'dragover'].forEach(ev =>
-      input.addEventListener(ev, () => drop.classList.add('is-over')));
-    ['dragleave', 'drop'].forEach(ev =>
-      input.addEventListener(ev, () => drop.classList.remove('is-over')));
-
-    form.addEventListener('submit', () => {
-      submit.classList.add('is-loading');
-      submit.querySelector('span').textContent = 'Uploading…';
-    });
-
-    /* ---------- uploaded files: search + pagination ---------- */
-    const listEl = document.getElementById('pu-list');
-    if (!listEl) return;
-
-    const rows   = Array.from(listEl.querySelectorAll('.pu-file'));
-    const search = document.getElementById('pu-search');
-    const none   = document.getElementById('pu-none');
-    const foot   = document.getElementById('pu-foot');
-    const range  = document.getElementById('pu-range');
-    const prev   = document.getElementById('pu-prev');
-    const next   = document.getElementById('pu-next');
-
-    const PER_PAGE = 10;
-    let page = 1;
-    let query = '';
-
-    function render() {
-      const matches = rows.filter(r => r.dataset.name.includes(query));
-      const pages   = Math.max(1, Math.ceil(matches.length / PER_PAGE));
-      page = Math.min(page, pages);
-
-      const start = (page - 1) * PER_PAGE;
-      const shown = matches.slice(start, start + PER_PAGE);
-
-      rows.forEach(r => { r.hidden = true; });
-      shown.forEach(r => { r.hidden = false; });
-
-      none.hidden = matches.length !== 0;
-      foot.hidden = matches.length <= PER_PAGE;
-
-      range.textContent = matches.length
-        ? (start + 1) + '–' + (start + shown.length) + ' of ' + matches.length
-        : '';
-
-      prev.disabled = page <= 1;
-      next.disabled = page >= pages;
     }
 
-    prev.addEventListener('click', () => { page--; render(); });
-    next.addEventListener('click', () => { page++; render(); });
+    input.addEventListener('change', update);
 
-    if (search) {
-      search.addEventListener('input', () => {
-        query = search.value.trim().toLowerCase();
-        page = 1;
-        render();
+    /* ---------- drag and drop anywhere on the box ---------- */
+    ['dragenter', 'dragover'].forEach(function (ev) {
+      box.addEventListener(ev, function (e) {
+        e.preventDefault();
+        box.classList.add('is-over');
       });
-    }
-    
-    render();
+    });
+
+    box.addEventListener('dragleave', function (e) {
+      if (!box.contains(e.relatedTarget)) box.classList.remove('is-over');
+    });
+
+    box.addEventListener('drop', function (e) {
+      e.preventDefault();
+      box.classList.remove('is-over');
+
+      var dropped = Array.prototype.filter.call(e.dataTransfer.files, function (f) {
+        return /\.pdf$/i.test(f.name);
+      });
+      if (!dropped.length) return;
+
+      var dt = new DataTransfer();
+      dropped.forEach(function (f) { dt.items.add(f); });
+      input.files = dt.files;
+      update();
+    });
+
+    /* ---------- uploading state ---------- */
+    form.addEventListener('submit', function () {
+      submit.classList.add('is-loading');
+      label.textContent = 'Uploading…';
+    });
   });
 </script>
 {% endblock %}
